@@ -1,0 +1,58 @@
+What it actually does
+
+Uses the AWS CLI to:
+
+List CloudFront standard log files in an S3 bucket (aws s3 ls s3://Class_Lab3/... --recursive)
+
+Pick the latest N objects (default --latest 3)
+
+Download them (aws s3 cp)
+
+Parse each log line and count CloudFront’s cache result types:
+
+Hit
+
+Miss
+
+RefreshHit
+
+Print a report with counts + percentages and some interpretation.
+
+So it’s not “moving traffic between Japan & São Paulo” directly — it’s measuring how well your global delivery layer is caching, which affects users in both regions.
+
+How that relates to Japan ↔ São Paulo (Lab 3 story)
+
+In your architecture, CloudFront is typically the “front door” that:
+
+serves content fast to users worldwide
+
+reduces load on your origin (which might be an ALB/EC2 in São Paulo, or a global endpoint that routes to São Paulo)
+
+helps keep Japan’s “data authority” side from being hammered by repeated reads
+
+This script gives you evidence for questions like:
+
+“Are overseas users mostly getting cached responses (Hit) instead of hammering the origin?”
+
+“Did my caching policy change improve performance?”
+
+“Did a deployment accidentally break caching (Miss spikes)?”
+
+What you can claim in the lab report / interview
+
+You implemented a log-based validation step:
+
+“After deploying CloudFront in front of the app, I analyzed standard logs from S3 and computed Hit/Miss/RefreshHit rates to validate caching behavior and origin load.”
+
+That’s a real platform-engineering habit: measure, don’t guess.
+
+Two small gotchas to be aware of (so you don’t get tricked)
+
+“Latest” selection is by key order, not timestamp.
+pick_latest() just takes the last N keys from aws s3 ls output. That’s fine if your CloudFront logs are date-partitioned in the key name (common), but it’s not guaranteed.
+
+This reads standard logs, not real-time logs.
+So it’s great for “proof after the fact,” not live dashboards.
+
+Example how you’d run it in Lab 3
+python malgus_cloudfront_log_explainer.py --bucket Class_Lab3 --prefix cloudfront-logs/ --latest 10

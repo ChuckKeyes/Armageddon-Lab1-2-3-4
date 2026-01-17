@@ -1,0 +1,126 @@
+Lab 3B — Japan Medical
+
+Audit Evidence & Regulator-Ready Logging (APPI mindset)
+
+🎯 Objective
+
+In this lab, students are not building “a system” — they are building proof.
+
+Protected Health Information (PHI) is stored only in Tokyo (ap-northeast-1), following the APPI mindset
+
+São Paulo (sa-east-1) is used only for compute
+
+Actions must be recorded as auditable evidence showing who did what, when, and where in a form suitable for regulators
+
+Logs from CloudFront, WAF, CloudTrail, and related services are bundled into a single evidence package
+
+(One original non-technical line omitted in public documentation)
+
+🧠 The Compliance-Audit Principle
+
+In regulated industries, “it works” loses to “it can be proven.”
+And global access does not mean global storage.
+
+What “Good Evidence” Looks Like
+
+(What auditors actually want)
+
+Audit, legal, and security teams typically look for the following six items:
+
+1. Data Residency Proof
+
+Proof that RDS exists in Tokyo
+
+Proof that no databases exist in other regions
+
+2. Access Trail
+
+Evidence of who invoked APIs
+
+No exposure of personal or sensitive data
+
+3. Change Trail
+
+Evidence of who changed security or infrastructure settings
+
+Provided via CloudTrail
+
+4. Network Corridor Proof
+
+Proof that traffic between São Paulo and Tokyo flows through Transit Gateway
+
+No undocumented or implicit paths
+
+5. Edge Security Proof
+
+Evidence that CloudFront + WAF sit in front of the application
+
+Proof that direct ALB access is closed
+
+6. Retention / Immutability Posture
+
+Audit logs must be stored in a location that cannot be tampered with
+
+Example: S3 with versioning and retention controls
+
+Required Services (Lab 3B Control Plane)
+1️⃣ CloudTrail (Change Evidence)
+
+CloudTrail Event History provides 90 days of management events by default
+
+Creating a Trail enables long-term storage in S3
+
+CloudTrail supports:
+
+Management events
+
+Data events
+
+Insights
+
+By default, management events are enabled
+
+Lab Requirement:
+Audit evidence must be collected in both Tokyo and São Paulo, at minimum for management events.
+
+2️⃣ CloudFront Logs (Edge Access Evidence)
+
+CloudFront standard logs record viewer requests
+
+x-edge-result-type enables proof of:
+
+Hit
+
+Miss
+
+RefreshHit
+
+Lab Requirement:
+The audit package must demonstrate that:
+
+Direct ALB access is closed
+
+All access occurs only via CloudFront
+
+3️⃣ WAF Logs (Security Evidence)
+
+WAF logs can be sent to:
+
+Kinesis Data Firehose
+
+CloudWatch Logs
+
+S3
+
+In real environments, Firehose is commonly used for SIEM ingestion
+
+Lab Requirement:
+Provide logs or aggregated evidence proving WAF Allow / Block behavior
+
+4️⃣ VPC Flow Logs / TGW Path Evidence (Network Corridor Proof)
+
+(This section proves the correctness of the design itself)
+
+VPC Flow Logs can be treated as non-PHI metadata
+
+Transit Gateway routes and attachments can be proven via CLI output

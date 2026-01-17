@@ -1,0 +1,22 @@
+╷
+│ Error: creating IAM Policy (japan-med-ec2-read-db-secret): operation error IAM: CreatePolicy, https response error StatusCode: 400, RequestID: 54655af7-0f32-43cc-be18-a0573381273c, MalformedPolicyDocument: Resource cek must be in ARN format or "*".
+│
+│   with aws_iam_policy.chewbacca_ec2_read_db_secret,
+│   on 10-iam_ec2_secrets_policy.tf line 5, in resource "aws_iam_policy" "chewbacca_ec2_read_db_secret":
+│    5: resource "aws_iam_policy" "chewbacca_ec2_read_db_secret" {
+│
+╵
+╷
+│ Error: creating EC2 Transit Gateway Peering Attachment: operation error EC2: CreateTransitGatewayPeeringAttachment, https response error StatusCode: 400, RequestID: fea940c5-dca1-44f2-aa99-9816b790f4ce, api error InvalidTransitGatewayID.Malformed: Invalid Transit Gateway id tgw-xxxxxxxxxxxxxxxxx.
+│
+│   with aws_ec2_transit_gateway_peering_attachment.shinjuku_to_liberdade_peer01,
+│   on 4-tokyo_tgw.tf line 16, in resource "aws_ec2_transit_gateway_peering_attachment" "shinjuku_to_liberdade_peer01":
+│   16: resource "aws_ec2_transit_gateway_peering_attachment" "shinjuku_to_liberdade_peer01" {
+│
+╵
+╷
+│ Error: creating RDS DB Instance (japan-med-rds-tokyo): operation error RDS: CreateDBInstance, https response error StatusCode: 400, RequestID: 00a5629f-f261-4a45-8b3f-2a59bdda9f9d, api error InvalidParameterCombination: Cannot find version 15.5 for postgres
+│
+│   with aws_db_instance.chewbacca_rds_tokyo,
+│   on 7-tokyo_rds.tf line 21, in resource "aws_db_instance" "chewbacca_rds_tokyo":
+│   21: resource "aws_db_instance" "chewbacca_rds_tokyo" {

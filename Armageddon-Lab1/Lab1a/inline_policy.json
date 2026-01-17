@@ -1,0 +1,9 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "ReadSpecificSecret",
+    "Effect": "Allow",
+    "Action": ["secretsmanager:GetSecretValue"],
+    "Resource": "arn:aws:secretsmanager:ap-northeast-1:557690581423:secret:lab/rds/mysql*"
+  }]
+}

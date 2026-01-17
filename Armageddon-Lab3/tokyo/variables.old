@@ -1,0 +1,136 @@
+############################################
+# variables.tf (single VPC foundation)
+############################################
+
+variable "vpc_name" {
+  description = "Name prefix for the VPC and related resources."
+  type        = string
+  default     = "armageddon-tokyo"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC. Example: 10.10.0.0/16"
+  type        = string
+
+  validation {
+    condition     = can(cidrnetmask(var.vpc_cidr))
+    error_message = "vpc_cidr must be a valid CIDR block (example: 10.10.0.0/16)."
+  }
+}
+
+variable "tags" {
+  description = "Common tags to apply to AWS resources."
+  type        = map(string)
+  default     = {}
+}
+
+# variable "tokyo_private_subnet_ids" {
+#   description = "Private subnet IDs for Tokyo RDS"
+#   type        = list(string)
+# }
+
+variable "rds_db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "rds_username" {
+  description = "RDS master username"
+  type        = string
+  sensitive   = true
+}
+
+variable "rds_password" {
+  description = "RDS master password"
+  type        = string
+  sensitive   = true
+}
+
+# variable "rds_secret_arn" {
+#   description = "ARN of the Secrets Manager secret holding DB credentials"
+#   type        = string
+# }
+
+############################################
+# Common naming + environment
+############################################
+
+variable "project_name" {
+  description = "Short name prefix for all resources (ex: chewbacca, japan-med, kcs)"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name (ex: dev, test, prod)"
+  type        = string
+  default     = "dev"
+}
+
+
+variable "tokyo_vpc_cidr" {
+  type        = string
+  description = "Tokyo VPC CIDR"
+}
+
+variable "tokyo_private_subnet_cidr01" {
+  type        = string
+  description = "Tokyo private subnet 01 CIDR"
+}
+
+variable "tokyo_private_subnet_cidr02" {
+  type        = string
+  description = "Tokyo private subnet 02 CIDR"
+}
+
+variable "liberdade_tgw_id" {
+  type        = string
+  description = "Transit Gateway ID from Sao Paulo (sa-east-1) state/output"
+}
+
+############################################
+# Cross-region peer inputs (from Sao Paulo)
+############################################
+
+variable "sao_paulo_vpc_cidr" {
+  description = "Sao Paulo VPC CIDR (used for TGW routes and SG rules)"
+  type        = string
+}
+
+# variable "liberdade_tgw_id" {
+#   description = "Sao Paulo Transit Gateway ID (tgw-...) used for TGW peering"
+#   type        = string
+# }
+
+
+# ############################################
+# # variables.tf  (Tokyo ↔ São Paulo TGW)
+# ############################################
+
+# # Tokyo (default provider) VPC CIDR
+# variable "tokyo_vpc_cidr" {
+#   description = "CIDR block for the Tokyo VPC (chewbacca_vpc01). Example: 10.10.0.0/16"
+#   type        = string
+
+#   validation {
+#     condition     = can(cidrnetmask(var.tokyo_vpc_cidr))
+#     error_message = "tokyo_vpc_cidr must be a valid CIDR block (example: 10.10.0.0/16)."
+#   }
+# }
+
+# # São Paulo (aws.saopaulo provider) VPC CIDR
+# variable "sao_paulo_vpc_cidr" {
+#   description = "CIDR block for the São Paulo VPC (liberdade_vpc01). Example: 10.20.0.0/16"
+#   type        = string
+
+#   validation {
+#     condition     = can(cidrnetmask(var.sao_paulo_vpc_cidr))
+#     error_message = "sao_paulo_vpc_cidr must be a valid CIDR block (example: 10.20.0.0/16)."
+#   }
+# }
+
+# # Optional: standard tags (safe to have even if not used everywhere yet)
+# variable "tags" {
+#   description = "Common tags to apply to AWS resources."
+#   type        = map(string)
+#   default     = {}
+# }

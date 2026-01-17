@@ -1,0 +1,23 @@
+cd /d D:\Obsidian
+git clone https://github.com/ChuckKeyes/Armageddon-Lab3-4.git
+
+
+cd /d D:\Obsidian\Armageddon-Lab3-4
+git add .
+git commit -m "Initial structure for Lab 3 and Lab 4 vault"
+git push
+
+
+echo "# Armageddon-Lab3-4" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ChuckKeyes/Armageddon-Lab3-4.git
+git push -u origin main
+
+
+git remote add origin https://github.com/ChuckKeyes/Armageddon-Lab3-4.git
+git branch -M main
+git push -u origin main
+

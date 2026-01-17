@@ -1,0 +1,6 @@
+cd "/d/New Obsidian/Armageddon-Lab3-4"
+mkdir -p Lab1
+
+git clone https://github.com/ChuckKeyes/Armageddon-Lab1.git /tmp/lab1
+rsync -av --exclude '.git' /tmp/lab1/ Lab1/
+rm -rf /tmp/lab1

@@ -1,0 +1,51 @@
+site_name: Home LLM & Smart Home Platform
+site_description: Local-first smart home automation with a private LLM brain
+site_author: Your Name
+site_url: https://home.keyescloudsolutions.com
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - toc.integrate
+  palette:
+    scheme: slate
+    primary: blue
+    accent: cyan
+
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+  - Hardware:
+      - Assembly: hardware/assembly.md
+      - Storage: hardware/storage.md
+  - Network:
+      - PoE & Segmentation: network/poe-network.md
+  - Home Assistant:
+      - Control Plane: home-assistant/control-plane.md
+  - Cameras & Security:
+      - Motion-Only Cameras: cameras/security.md
+  - Education:
+      - Learning Use Cases: education/use-cases.md
+  - LLM Server:
+      - Deep Dive: llm/server-deep-dive.md
+  - Operations:
+      - Growth & Maintenance: operations/growth.md
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - tables
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.highlight
+
+plugins:
+  - search
