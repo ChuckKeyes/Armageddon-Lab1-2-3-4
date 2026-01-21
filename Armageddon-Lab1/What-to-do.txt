@@ -1,0 +1,28 @@
+class 7 (1/17/25) - Saturday
+week 17 (Armageddon wk 2): student led working sessions
+
+**** deadline for Class 7 Armageddon submissions: 2/3/26 ****
+
+Armageddon repo: https://github.com/BalericaAI/armageddon/tree/main/SEIR_Foundations
+
+Class 7 must do:
+- Lab 1, all the way to bonus F 
+- Lab 2, all the way to be BAM B 
+- Lab 3a and 3b
+* the further you go in the labs, the more work ready you become
+
+Any students who were designated as Single A:
+- Single A Armageddon FIRST
+- Class 7 Armageddon SECOND
+* if a student is in Single A, does not complete the Single A Armageddon, and attempts only the Class 7 Armageddon, they will not receive credit for their Class 7 Armageddon contributions.
+
+Any students who also did GCP:
+- Above + Lab 4
+
+Any students who were able to complete Labs 1-4
+- Lab 5 (red team labs)
+Notes:
+- only repos are allowed for submissions
+- heavily suggested to make submissions within a group
+- individual submissions are accepted, but success/progress is unlikely for most
+- if code from "repo A" is pirated without attribution/credit and presented in "repo B" as a complete repo for submission, the creators of "repo A" and "repo B" will both be marked as a failure and not accepted for critique

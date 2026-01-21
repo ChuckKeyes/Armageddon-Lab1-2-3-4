@@ -1,0 +1,74 @@
+# Explanation: Outputs are the mission coordinates — where to point your browser and your blasters.
+output "chewbacca_alb_dns_name" {
+  value = aws_lb.chewbacca_alb01.dns_name
+}
+
+output "chewbacca_app_fqdn" {
+  value = "${var.app_subdomain}.${var.domain_name}"
+}
+
+output "chewbacca_target_group_arn" {
+  value = aws_lb_target_group.chewbacca_tg01.arn
+}
+
+output "chewbacca_acm_cert_arn" {
+  value = aws_acm_certificate.chewbacca_acm_cert01.arn
+}
+
+output "chewbacca_waf_arn" {
+  value = var.enable_waf ? aws_wafv2_web_acl.chewbacca_waf01[0].arn : null
+}
+
+output "chewbacca_dashboard_name" {
+  value = aws_cloudwatch_dashboard.chewbacca_dashboard01.dashboard_name
+}
+
+output "alb_logs_bucket_name" {
+  value = try(aws_s3_bucket.alb_logs_bucket[0].bucket, null)
+}
+
+############################################
+# Bonus B Outputs
+############################################
+
+# Public entry point to the application
+output "alb_dns_name" {
+  description = "DNS name of the public Application Load Balancer"
+  value       = aws_lb.alb.dns_name
+}
+
+# Fully-qualified domain name for the app (app.example.com)
+output "app_fqdn" {
+  description = "Application FQDN served by the ALB"
+  value       = "${var.app_subdomain}.${var.domain_name}"
+}
+
+# Target group ARN (private EC2 backends)
+output "target_group_arn" {
+  description = "ARN of the ALB target group"
+  value       = aws_lb_target_group.tg.arn
+}
+
+# ACM certificate used for HTTPS
+output "acm_certificate_arn" {
+  description = "ARN of the ACM certificate for HTTPS"
+  value       = aws_acm_certificate.cert.arn
+}
+
+# WAF Web ACL (if enabled)
+output "waf_arn" {
+  description = "ARN of the WAFv2 Web ACL (if enabled)"
+  value       = var.enable_waf ? aws_wafv2_web_acl.waf[0].arn : null
+}
+
+# CloudWatch dashboard name
+output "dashboard_name" {
+  description = "CloudWatch dashboard for ALB monitoring"
+  value       = aws_cloudwatch_dashboard.dashboard.dashboard_name
+}
+
+# ALB access logs bucket (if enabled)
+output "alb_logs_bucket_name" {
+  description = "S3 bucket name storing ALB access logs (if enabled)"
+  value       = try(aws_s3_bucket.alb_logs_bucket[0].bucket, null)
+}

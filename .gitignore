@@ -22,6 +22,12 @@
 **/crash.log*
 !**/.terraform.lock.hcl
 
+# ---- Secrets / keys ----
+**/*.json
+!**/*.tf.json
+!**/package.json
+!**/tsconfig.json
+
 ############################
 # Big media / books (keep out of repo)
 ############################

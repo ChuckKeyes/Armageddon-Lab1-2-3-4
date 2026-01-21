@@ -1,0 +1,25 @@
+aws secretsmanager restore-secret \
+  --secret-id "ceklab1/rds/mysql" \
+  --region us-east-1
+
+Check secret manager is OK
+
+aws secretsmanager describe-secret \
+  --secret-id "ceklab1/rds/mysql" \
+  --region us-east-1 \
+  --query "{Name:Name,ARN:ARN,DeletedDate:DeletedDate}"
+
+Import the secret into Terraform state
+
+terraform import aws_secretsmanager_secret.ceklab1_db_secret01 "ceklab1/rds/mysql"
+
+
+
+
+
+Option 2: Permanently delete it (only if you truly want it gone)
+
+aws secretsmanager list-secrets \
+  --region us-east-1 \
+  --query "SecretList[?Name=='ceklab1/rds/mysql'].ARN" \
+  --output text

@@ -8,6 +8,11 @@ resource "google_compute_firewall" "nihonmachi_allow_https_from_vpn01" {
     ports    = ["443"]
   }
 
+allow {
+  protocol = "tcp"
+  ports    = ["5432"]
+}
+
   source_ranges = var.allowed_vpn_cidrs
   target_tags   = ["nihonmachi-app"]
 }
@@ -22,7 +27,14 @@ resource "google_compute_firewall" "nihonmachi_allow_hc01" {
     ports    = ["443"]
   }
 
+allow {
+  protocol = "tcp"
+  ports    = ["5432"]
+}
+
   # GCP health check ranges (students can keep this as-is; instructor can provide exact ranges later if desired)
   source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
   target_tags   = ["nihonmachi-app"]
 }
+
+
