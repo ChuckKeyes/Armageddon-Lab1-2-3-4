@@ -157,13 +157,40 @@ resource "aws_security_group" "ceklab1_rds_sg01" {
   description = "RDS security group"
   vpc_id      = aws_vpc.ceklab1_vpc01.id
   # vpc_security_group_ids = [aws_security_group.app_sg.id]
+}
+resource "aws_security_group" "alb_sg" {
+  name   = "${var.project_name}-alb-sg"
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 
   # TODO: student adds inbound MySQL 3306 from aws_security_group.ceklab1_ec2_sg01.id
 
-  tags = {
-    Name = "${local.name_prefix}-rds-sg01"
-  }
-}
+  # tags = {
+  #   Name = "${local.name_prefix}-rds-sg01"
+  # }
+
 
 ############################################
 # RDS Subnet Group
@@ -312,7 +339,7 @@ resource "aws_ssm_parameter" "ceklab1_db_name_param" {
 
 # Explanation: Secrets Manager is ceklab1’s locked holster—credentials go here, not in code.
 resource "aws_secretsmanager_secret" "ceklab1_db_secret01" {
-  name = "${local.name_prefix}/rds/mysql-v3"
+  name = "${local.name_prefix}/rds/mysql-v6"
 }
 
 # Explanation: Secret payload—students should align this structure with their app (and support rotation later).
@@ -450,6 +477,28 @@ module "ceklab1c_b" {
 route53_hosted_zone_id      = var.route53_zone_id
 
 }
+
+################################################################################################
+resource "aws_sns_topic" "ir_incident_topic" {
+  name = "${var.project_name}-ir-incidents"
+}
+
+
+
+################################################################################################
+module "bonus_g_bedrock" {
+  source = "./modules/bonus_g_bedrock"
+
+  project_name     = var.project_name
+  sns_topic_arn    = aws_sns_topic.ir_incident_topic.arn
+  bedrock_model_id = var.bedrock_model_id
+  app_log_group    = "/aws/ec2/${var.project_name}-rds-app"
+  waf_log_group    = "aws-waf-logs-${var.project_name}-webacl01"
+  
+
+}
+
+
 
 # enable_alb_access_logs   = true
 # alb_access_logs_prefix   = "alb"

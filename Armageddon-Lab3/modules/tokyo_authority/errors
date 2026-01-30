@@ -1,0 +1,14 @@
+╷
+│ Error: waiting for EC2 Transit Gateway Peering Attachment (tgw-attach-0788c0ce99c7f2fa3) create: unexpected state 'failed', wanted target 'available, pendingAcceptance'. last error: failed: Failed to create peering attachment. This may be a result of incorrect Transit Gateway ID and Account ID combination
+│
+│   with aws_ec2_transit_gateway_peering_attachment.shinjuku_to_liberdade_peer01,
+│   on 4-tokyo_tgw.tf line 16, in resource "aws_ec2_transit_gateway_peering_attachment" "shinjuku_to_liberdade_peer01":
+│   16: resource "aws_ec2_transit_gateway_peering_attachment" "shinjuku_to_liberdade_peer01" {
+│
+╵
+╷
+│ Error: creating Secrets Manager Secret (japan-med/tokyo/rds-v2): operation error Secrets Manager: CreateSecret, https response error StatusCode: 400, RequestID: 3afa8aad-1123-4eeb-a7b1-77abd892aaf6, InvalidRequestException: You can't create this secret because a secret with this name is already scheduled for deletion.
+│
+│   with aws_secretsmanager_secret.tokyo_db_secret,
+│   on 5-tokyo_secrets.tf line 1, in resource "aws_secretsmanager_secret" "tokyo_db_secret":
+│    1: resource "aws_secretsmanager_secret" "tokyo_db_secret" {

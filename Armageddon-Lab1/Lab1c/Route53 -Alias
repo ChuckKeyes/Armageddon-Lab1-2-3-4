@@ -1,0 +1,105 @@
+
+aws route53 change-resource-record-sets \
+  --hosted-zone-id Z0247703397I0ACTR7D96 \
+  --change-batch '{
+    "Comment": "Alias www to ALB",
+    "Changes": [
+      {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+          "Name": "www.keyescloudsolutions.com",
+          "Type": "A",
+          "AliasTarget": {
+            "HostedZoneId": "ALB_ZONE_ID_HERE",
+            "DNSName": "ceklab1-alb-882110808.us-east-1.elb.amazonaws.com",
+            "EvaluateTargetHealth": false
+          }
+        }
+      }
+    ]
+  }'
+################################################################################
+
+## root domain too:
+
+aws route53 change-resource-record-sets \
+  --hosted-zone-id Z0247703397I0ACTR7D96 \
+  --change-batch '{
+    "Comment": "Alias root to ALB",
+    "Changes": [
+      {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+          "Name": "keyescloudsolutions.com",
+          "Type": "A",
+          "AliasTarget": {
+            "HostedZoneId": "ALB_ZONE_ID_HERE",
+            "DNSName": "ceklab1-alb-882110808.us-east-1.elb.amazonaws.com",
+            "EvaluateTargetHealth": false
+          }
+        }
+      }
+    ]
+  }'
+##########################################################################
+
+## Verify
+
+aws route53 list-resource-record-sets --hosted-zone-id Z0247703397I0ACTR7D96
+nslookup www.keyescloudsolutions.com
+#############################################################################
+
+chuck@LAPTOP-1B94MM1R:/d/New Obsidian/Armageddon-Lab1-2-3-4/Armageddon-Lab1/Lab1c$ aws route53 get-change --id /change/C05875053IBHPH14ZS4C9
+{
+    "ChangeInfo": {
+        "Id": "/change/C05875053IBHPH14ZS4C9",
+        "Status": "INSYNC",
+        "SubmittedAt": "2026-01-23T00:03:23.716000+00:00",
+        "Comment": "Alias www to ALB"
+    }
+}
+
+chuck@LAPTOP-1B94MM1R:/d/New Obsidian/Armageddon-Lab1-2-3-4/Armageddon-Lab1/Lab1c$ 
+chuck@LAPTOP-1B94MM1R:/d/New Obsidian/Armageddon-Lab1-2-3-4/Armageddon-Lab1/Lab1c$ nslookup www.keyescloudsolutions.com
+Server:  UnKnown
+Address:  192.168.0.1
+
+Non-authoritative answer:
+Name:    www.keyescloudsolutions.com
+Addresses:  23.21.204.114
+          23.20.110.202  
+
+          #############################################################################
+
+      Confirm root alias becomes INSYNC
+
+          aws route53 get-change --id /change/C0140419HZDZB5P7ZT5G
+
+{
+    "ChangeInfo": {
+        "Id": "/change/C0140419HZDZB5P7ZT5G",
+        "Status": "INSYNC",
+        "SubmittedAt": "2026-01-23T00:04:21.759000+00:00",
+        "Comment": "Alias root to ALB"
+    }
+}
+
+######################################################################################
+
+Verify root resolves
+
+nslookup keyescloudsolutions.com
+
+Server:  UnKnown
+Address:  192.168.0.1
+
+Non-authoritative answer:
+Name:    keyescloudsolutions.com
+Addresses:  23.21.204.114
+          23.20.110.202
+
+
+aws elbv2 describe-target-health \
+  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:557690581423:targetgroup/ceklab1-tg/b5811b14e92ea685 \
+  --query "TargetHealthDescriptions[].{Target:Target.Id,Port:Target.Port,State:TargetHealth.State,Reason:TargetHealth.Reason,Desc:TargetHealth.Description}" \
+  --output table

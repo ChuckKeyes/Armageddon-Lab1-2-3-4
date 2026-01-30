@@ -1,0 +1,255 @@
+Lab1a — Bonus A
+AWS Console Steps (End-to-End)
+🎯 Goal recap (keep this in your head)
+
+EC2 in private subnet
+
+No public IP
+
+No SSH
+
+Access via SSM Session Manager
+
+No NAT required for AWS APIs
+
+Use VPC Endpoints
+
+Least-privilege IAM
+
+S3 reachable via Gateway Endpoint
+
+STEP 1 — Create (or verify) the VPC
+Console
+
+VPC → Your VPCs
+
+You should have:
+
+A VPC (ex: ceklab1-vpc)
+
+CIDR like 10.0.0.0/16
+
+If creating manually:
+
+VPC only (no wizard extras)
+
+Enable DNS hostnames
+
+Enable DNS resolution
+
+✅ This allows SSM + endpoints to work.
+
+STEP 2 — Create subnets (public + private)
+Console
+
+VPC → Subnets
+
+Create:
+
+Public subnet
+
+Has route to Internet Gateway
+
+Private subnet
+
+NO route to Internet Gateway
+
+👉 Bonus A EC2 will live in the private subnet.
+
+STEP 3 — Route tables (this is critical)
+Public Route Table
+
+VPC → Route Tables
+
+Route: 0.0.0.0/0 → Internet Gateway
+
+Associated with public subnet
+
+Private Route Table
+
+❌ NO Internet Gateway route
+
+(Optional) NAT route — can be omitted for Bonus A
+
+Associated with private subnet
+
+STEP 4 — Create VPC Endpoints (core of Bonus A)
+Console
+
+VPC → Endpoints → Create endpoint
+
+You will create multiple endpoints.
+
+4A️⃣ Interface endpoints (repeat for each service)
+
+Create Interface endpoints for:
+
+Service	Name contains
+SSM	ssm
+EC2Messages	ec2messages
+SSMMessages	ssmmessages
+CloudWatch Logs	logs
+Secrets Manager	secretsmanager
+KMS (optional)	kms
+
+For each endpoint:
+
+VPC: your lab VPC
+
+Subnets: private subnet(s)
+
+Security group: allow 443 from VPC CIDR
+
+Enable private DNS
+
+✅ This replaces NAT for AWS APIs.
+
+4B️⃣ S3 Gateway Endpoint (don’t miss this)
+
+Create Gateway endpoint:
+
+Service: com.amazonaws.<region>.s3
+
+Route table: private route table
+
+✅ This is the classic “gotcha” students miss.
+
+STEP 5 — IAM role for EC2 (least privilege)
+Console
+
+IAM → Roles → Create role
+
+Trusted entity: EC2
+
+Attach:
+
+AmazonSSMManagedInstanceCore
+
+Add inline policy (tight IAM)
+
+Example logic (console version):
+
+Allow secretsmanager:GetSecretValue
+
+Resource: your secret only
+
+Allow ssm:GetParameter, GetParameters
+
+Resource: /lab/db/*
+
+✅ This proves you understand least privilege.
+
+STEP 6 — Create Secrets + Parameters
+Secrets Manager
+
+Secrets Manager → Store a new secret
+
+Example: DB credentials
+
+Name it something lab-specific
+
+SSM Parameter Store
+
+Systems Manager → Parameter Store
+
+Create parameter:
+
+Name: /lab/db/endpoint
+
+Type: String
+
+Value: mock DB endpoint
+
+STEP 7 — Launch EC2 (private, no SSH)
+Console
+
+EC2 → Launch instance
+
+Key choices:
+
+Subnet: private subnet
+
+Auto-assign public IP: DISABLED
+
+Security group:
+
+❌ No SSH (22)
+
+❌ No 0.0.0.0/0 inbound
+
+IAM role: SSM role you created
+
+AMI: Amazon Linux
+
+Launch.
+
+✅ Instance is now private and unreachable from internet.
+
+STEP 8 — Verify Session Manager access (NO SSH)
+Console
+
+Systems Manager → Session Manager → Start session
+
+If the instance appears:
+
+SSM works
+
+Endpoints work
+
+IAM is correct
+
+This is a huge validation point.
+
+STEP 9 — Student verification commands (from your lab doc)
+
+Run these from your local CLI or inside SSM session.
+
+✅ 1) Prove no public IP
+aws ec2 describe-instances \
+  --instance-ids <INSTANCE_ID> \
+  --query "Reservations[].Instances[].PublicIpAddress"
+
+
+Expected:
+
+null
+
+✅ 2) Prove endpoints exist
+aws ec2 describe-vpc-endpoints \
+  --filters "Name=vpc-id,Values=<VPC_ID>" \
+  --query "VpcEndpoints[].ServiceName"
+
+
+Expect to see:
+
+ssm
+ec2messages
+ssmmessages
+logs
+secretsmanager
+s3
+
+✅ 3) Prove Session Manager path
+aws ssm describe-instance-information
+
+
+Your instance ID should appear.
+
+✅ 4) Prove secrets + parameters access
+
+(from SSM session)
+
+aws ssm get-parameter --name /lab/db/endpoint
+aws secretsmanager get-secret-value --secret-id <secret-name>
+
+✅ 5) Prove CloudWatch Logs path
+aws logs describe-log-streams \
+  --log-group-name /aws/ec2/<prefix>-rds-app
+
+Why instructors & employers love this lab
+
+You can confidently say:
+
+“I deployed private EC2 with no public IPs, no SSH, no NAT dependency for AWS APIs, using VPC endpoints, SSM Session Manager, least-privilege IAM, and private logging paths.”
+
+That is real enterprise AWS.

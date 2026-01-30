@@ -87,26 +87,26 @@ resource "aws_lb" "alb" {
 ############################################
 # Target Group + Attachment
 ############################################
-resource "aws_lb_target_group" "tg" {
-  name     = "${var.project_name}-tg"
-  port     = var.target_port
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+# resource "aws_lb_target_group" "tg" {
+#   name     = "${var.project_name}-tg"
+#   port     = var.target_port
+#   protocol = "HTTP"
+#   vpc_id   = var.vpc_id
 
-  health_check {
-    enabled             = true
-    interval            = 30
-    path                = var.health_check_path
-    port                = "traffic-port"
-    protocol            = "HTTP"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 5
-    matcher             = "200-399"
-  }
+#   health_check {
+#     enabled             = true
+#     interval            = 30
+#     path                = var.health_check_path
+#     port                = "traffic-port"
+#     protocol            = "HTTP"
+#     healthy_threshold   = 2
+#     unhealthy_threshold = 2
+#     timeout             = 5
+#     matcher             = "200-399"
+#   }
 
-  tags = { Name = "${var.project_name}-tg" }
-}
+#   tags = { Name = "${var.project_name}-tg" }
+# }
 
 resource "aws_lb_target_group_attachment" "tg_attach" {
   target_group_arn = aws_lb_target_group.tg.arn

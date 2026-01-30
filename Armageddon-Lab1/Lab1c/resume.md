@@ -1,0 +1,1 @@
+“I built an automated incident response pipeline where CloudWatch alarms publish to SNS, a Lambda function analyzes logs and metrics, generates an executive-grade incident report using Amazon Bedrock, and stores immutable reports in S3.”

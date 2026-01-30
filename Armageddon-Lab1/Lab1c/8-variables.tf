@@ -10,6 +10,12 @@ variable "project_name" {
   default     = "ceklab1"
 }
 
+variable "vpc_id" {
+  description = "VPC ID for resources that need an existing VPC reference"
+  type        = string
+}
+
+
 variable "vpc_cidr" {
   description = "VPC CIDR (use 10.x.x.x/xx as instructed)."
   type        = string
@@ -124,6 +130,10 @@ variable "route53_hosted_zone_id" {
   default     = ""
 }
 
+variable "bedrock_model_id" {
+  description = "Amazon Bedrock model ID to use for incident report generation (e.g., anthropic.claude-3-haiku-20240307-v1:0)"
+  type        = string
+}
 
 
 

@@ -1,0 +1,16 @@
+module "tokyo" { source = "./modules/tokyo_authority"  }
+
+# module "saopaulo" { source = "./modules/saopaulo_compute" ... }
+
+# module "corridor" {
+#   source = "./modules/tgw_corridor"
+
+#   tokyo_vpc_id                 = module.tokyo.vpc_id
+#   tokyo_vpc_cidr               = module.tokyo.vpc_cidr
+#   tokyo_private_route_table_ids= module.tokyo.private_route_table_ids
+#   tokyo_rds_sg_id              = module.tokyo.rds_sg_id
+
+#   sp_vpc_id                    = module.saopaulo.vpc_id
+#   sp_vpc_cidr                  = module.saopaulo.vpc_cidr
+#   sp_private_route_table_ids   = module.saopaulo.private_route_table_ids
+# }

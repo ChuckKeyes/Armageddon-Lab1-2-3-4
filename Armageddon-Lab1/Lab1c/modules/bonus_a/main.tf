@@ -84,6 +84,25 @@ resource "aws_instance" "private" {
 
   tags = merge(local.common_tags, { Name = "${local.name_prefix}-ec2-private" })
 }
+################################################
+resource "aws_instance" "app" {
+  # ... your existing settings ...
+
+  user_data = <<-EOF
+    #!/bin/bash
+    set -e
+
+    # Install Apache (Amazon Linux)
+    yum -y install httpd
+
+    # Basic web page + health response
+    echo "<h1>${var.project_name} - ALB Target OK</h1>" > /var/www/html/index.html
+
+    systemctl enable httpd
+    systemctl start httpd
+  EOF
+}
+
 
 ############################################
 # Least-Privilege IAM policies (attach to existing role outside module)

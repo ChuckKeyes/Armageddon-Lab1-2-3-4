@@ -1,0 +1,3 @@
+terraform init
+terraform plan  -target=module.tgw_tokyo -target=module.tokyo_vpc -target=module.tokyo_workloads
+terraform apply -target=module.tgw_tokyo -target=module.tokyo_vpc -target=module.tokyo_workloads

@@ -39,6 +39,7 @@ variable "tokyo_vpc_cidr" {
 variable "tokyo_private_subnet_cidr01" {
   description = "Tokyo private subnet AZ1"
   type        = string
+  default     = "null"
 }
 
 variable "tokyo_private_subnet_cidr02" {
@@ -50,9 +51,16 @@ variable "tokyo_private_subnet_cidr02" {
 # TGW / Peering
 ############################################
 
-variable "liberdade_tgw_id" {
-  description = "São Paulo Transit Gateway ID"
+variable "tokyo_tgw_id" {
+  description = "Tokyo TGW ID (optional: if null, use TGW created in this module)"
   type        = string
+  default     = null
+}
+
+variable "liberdade_tgw_id" {
+  description = "São Paulo Transit Gateway ID (optional for Tokyo-only)"
+  type        = string
+  default     = "null"
 }
 
 variable "sao_paulo_vpc_cidr" {
@@ -80,3 +88,4 @@ variable "rds_password" {
   type        = string
   sensitive   = true
 }
+

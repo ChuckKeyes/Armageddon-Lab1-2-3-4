@@ -1,0 +1,172 @@
+Armageddon-Lab1-2-3-4/
+│
+├── README.md
+├── .gitignore
+│
+├── Armageddon-Lab1/
+│   ├── README.md
+│   │
+│   ├── Lab1a/
+│   │   ├── terraform/
+│   │   │   ├── 0-providers.tf
+│   │   │   ├── 1-variables.tf
+│   │   │   ├── 2-main.tf
+│   │   │   ├── 3-outputs.tf
+│   │   │   ├── terraform.tfvars.example
+│   │   │   └── README.md
+│   │   │
+│   │   ├── evidence/
+│   │   │   ├── screenshots/
+│   │   │   ├── curl-tests.txt
+│   │   │   └── validation-notes.md
+│   │   │
+│   │   └── notes/
+│   │       ├── Lab1a-what-this-proves.md
+│   │       └── Lab1a-lessons-learned.md
+│   │
+│   ├── Lab1b/
+│   │   ├── terraform/
+│   │   │   ├── 0-providers.tf
+│   │   │   ├── 1-variables.tf
+│   │   │   ├── 2-main.tf
+│   │   │   ├── 3-outputs.tf
+│   │   │   ├── terraform.tfvars.example
+│   │   │   └── README.md
+│   │   │
+│   │   ├── modules/
+│   │   │   └── bonus_a/
+│   │   │       ├── main.tf
+│   │   │       ├── variables.tf
+│   │   │       ├── outputs.tf
+│   │   │       └── README.md
+│   │   │
+│   │   ├── evidence/
+│   │   │   ├── screenshots/
+│   │   │   └── outputs-captured.txt
+│   │   │
+│   │   └── notes/
+│   │       └── Lab1b-explanation.md
+│   │
+│   ├── Lab1c/
+│   │   ├── terraform/
+│   │   │   ├── 0-providers.tf
+│   │   │   ├── 1-variables.tf
+│   │   │   ├── 2-main.tf
+│   │   │   ├── 3-outputs.tf
+│   │   │   ├── terraform.tfvars.example
+│   │   │   └── README.md
+│   │   │
+│   │   ├── modules/
+│   │   │   └── bonus_b/
+│   │   │       ├── 1-main.tf
+│   │   │       ├── 7-route53_and_acm_validation.tf
+│   │   │       ├── 9-variables.tf
+│   │   │       ├── 11-outputs.tf
+│   │   │       ├── 15-alb_access_logs.tf
+│   │   │       └── README.md
+│   │   │
+│   │   ├── evidence/
+│   │   │   ├── screenshots/
+│   │   │   ├── alb-url-test.txt
+│   │   │   └── acm-validation-proof.txt
+│   │   │
+│   │   └── notes/
+│   │       └── Lab1c-architecture-explanation.md
+│
+├── Armageddon-Lab2/
+│   ├── README.md
+│   ├── terraform/
+│   │   ├── providers.tf
+│   │   ├── networking.tf
+│   │   ├── security.tf
+│   │   ├── compute.tf
+│   │   ├── outputs.tf
+│   │   └── terraform.tfvars.example
+│   │
+│   ├── modules/
+│   │   └── shared/
+│   │       ├── vpc/
+│   │       ├── iam/
+│   │       └── logging/
+│   │
+│   ├── evidence/
+│   │   ├── screenshots/
+│   │   └── validation.md
+│   │
+│   └── notes/
+│       └── Lab2-design-notes.md
+│
+├── Armageddon-Lab3/
+│   ├── README.md
+│   ├── terraform/
+│   │   ├── global/
+│   │   │   ├── providers.tf
+│   │   │   ├── transit-gateway.tf
+│   │   │   └── outputs.tf
+│   │   │
+│   │   ├── tokyo/
+│   │   │   ├── providers.tf
+│   │   │   ├── vpc.tf
+│   │   │   ├── rds.tf
+│   │   │   ├── iam.tf
+│   │   │   └── outputs.tf
+│   │   │
+│   │   ├── sao-paulo/
+│   │   │   ├── providers.tf
+│   │   │   ├── compute.tf
+│   │   │   └── outputs.tf
+│   │   │
+│   │   └── terraform.tfvars.example
+│   │
+│   ├── modules/
+│   │   ├── medical_db/
+│   │   ├── cross_region_tgw/
+│   │   └── logging_proof/
+│   │
+│   ├── evidence/
+│   │   ├── cloudfront/
+│   │   ├── rds-residency/
+│   │   ├── tgw-corridor/
+│   │   └── audit-pack/
+│   │
+│   └── notes/
+│       ├── Lab3-APPI-compliance.md
+│       └── Lab3-interview-talking-points.md
+│
+├── Armageddon-Lab4/
+│   ├── README.md
+│   ├── terraform/
+│   │   ├── providers.tf
+│   │   ├── iam.tf
+│   │   ├── networking.tf
+│   │   ├── vpn.tf
+│   │   ├── outputs.tf
+│   │   └── terraform.tfvars.example
+│   │
+│   ├── modules/
+│   │   ├── gcp_vpc/
+│   │   ├── ha_vpn/
+│   │   ├── aws_side/
+│   │   └── monitoring/
+│   │
+│   ├── scripts/
+│   │   ├── validation.py
+│   │   └── evidence_collector.sh
+│   │
+│   ├── evidence/
+│   │   ├── bgp/
+│   │   ├── latency-tests/
+│   │   └── screenshots/
+│   │
+│   └── notes/
+│       ├── Lab4-hybrid-architecture.md
+│       └── Lab4-what-this-proves.md
+│
+└── docs/
+    ├── diagrams/
+    │   ├── lab1/
+    │   ├── lab3/
+    │   └── lab4/
+    │
+    └── portfolio/
+        └── README.md

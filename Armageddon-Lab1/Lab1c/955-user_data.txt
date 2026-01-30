@@ -1,0 +1,19 @@
+resource "aws_instance" "app" {
+  # ... your existing settings ...
+
+  user_data = <<-EOF
+    #!/bin/bash
+    set -e
+
+    # Install Apache (Amazon Linux)
+    yum -y install httpd
+
+    # Basic web page + health response
+    echo "<h1>${var.project_name} - ALB Target OK</h1>" > /var/www/html/index.html
+
+    systemctl enable httpd
+    systemctl start httpd
+  EOF
+}
+
+nl -ba modules/bonus_a/main.tf | sed -n '70,120p'
