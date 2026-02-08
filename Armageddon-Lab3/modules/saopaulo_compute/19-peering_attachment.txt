@@ -1,0 +1,71 @@
+
+
+############################################
+# TGW Peering: Tokyo <-> São Paulo
+############################################
+
+# Tokyo creates the peering request
+resource "aws_ec2_transit_gateway_peering_attachment" "tokyo_to_saopaulo" {
+  provider = aws.tokyo
+
+  transit_gateway_id      = "tgw-04a758504cdbb5c89"
+  peer_transit_gateway_id = "tgw-0ccc88e31b142add9"
+  peer_region             = "sa-east-1"
+
+  tags = {
+    Name = "lab3cek-tokyo-to-saopaulo-peer"
+  }
+}
+
+# São Paulo accepts the peering request
+resource "aws_ec2_transit_gateway_peering_attachment_accepter" "saopaulo_accept" {
+  provider = aws.saopaulo
+
+  transit_gateway_attachment_id = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  tags = {
+    Name = "lab3cek-saopaulo-accept-peer"
+  }
+}
+############################################################################################
+
+############################################
+# TGW Route Table Routes (both directions)
+############################################
+
+# --- Tokyo TGW route table ---
+# If you have a TGW route table resource in Terraform, use that.
+# Otherwise, use the TGW's default association route table ID by data lookup.
+
+data "aws_ec2_transit_gateway" "tokyo_tgw" {
+  provider           = aws.tokyo
+  transit_gateway_id = "tgw-04a758504cdbb5c89"
+}
+
+# Route Tokyo TGW -> São Paulo VPC CIDR via peering attachment
+resource "aws_ec2_transit_gateway_route" "tokyo_to_saopaulo_route" {
+  provider = aws.tokyo
+
+  transit_gateway_route_table_id = data.aws_ec2_transit_gateway.tokyo_tgw.association_default_route_table_id
+  destination_cidr_block         = "10.20.0.0/16"
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  depends_on = [aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept]
+}
+
+# --- São Paulo TGW route table ---
+data "aws_ec2_transit_gateway" "saopaulo_tgw" {
+  provider           = aws.saopaulo
+  transit_gateway_id = "tgw-0ccc88e31b142add9"
+}
+
+# Route São Paulo TGW -> Tokyo VPC CIDR via peering attachment
+resource "aws_ec2_transit_gateway_route" "saopaulo_to_tokyo_route" {
+  provider = aws.saopaulo
+
+  transit_gateway_route_table_id = data.aws_ec2_transit_gateway.saopaulo_tgw.association_default_route_table_id
+  destination_cidr_block         = "10.10.0.0/16"
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  depends_on = [aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept]
+}

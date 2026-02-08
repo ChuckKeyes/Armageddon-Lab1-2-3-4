@@ -20,7 +20,64 @@ variable "rds_username" { type = string }
 variable "rds_password" { type = string }
 
 # If your tokyo module still requires these right now:
-variable "sao_paulo_vpc_cidr" { type = string }
-variable "liberdade_tgw_id"   { type = string }
+
 variable "tokyo_tgw_id"       { type = string }
-variable "tokyo_private_route_table_id" { type = string }
+# variable "tokyo_private_route_table_ids" {
+#   type = list(string)
+# }
+
+variable "tokyo_tgw_route_table_id" {
+  description = "Tokyo TGW route table ID"
+  type        = string
+}
+
+variable "tokyo_private_route_table_ids" {
+  type    = list(string)
+  default = ["rtb-0029ea9f5ecc56557"]
+}
+
+
+###########################################################################
+
+
+variable "liberdade_tgw_id"   { type = string }
+
+
+variable "saopaulo_vpc_cidr" {
+  type = string
+}
+
+variable "saopaulo_private_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "saopaulo_public_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "saopaulo_ami_id" {
+  type = string
+}
+
+variable "saopaulo_instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+variable "saopaulo_az1" {
+  type = string
+}
+
+variable "saopaulo_az2" {
+  type = string
+}
+
+variable "ami_id" {
+  description = "AMI ID for Sao Paulo instances (sa-east-1)"
+  type        = string
+}
+
+# variable "tokyo_private_route_table_ids" {
+#   type    = list(string)
+#   default = []
+# }

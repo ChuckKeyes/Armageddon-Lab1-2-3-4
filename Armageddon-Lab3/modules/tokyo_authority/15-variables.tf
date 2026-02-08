@@ -57,16 +57,16 @@ variable "tokyo_tgw_id" {
   default     = null
 }
 
-variable "liberdade_tgw_id" {
-  description = "São Paulo Transit Gateway ID (optional for Tokyo-only)"
-  type        = string
-  default     = "null"
-}
+# variable "liberdade_tgw_id" {
+#   description = "São Paulo Transit Gateway ID (optional for Tokyo-only)"
+#   type        = string
+#   default     = "null"
+# }
 
-variable "sao_paulo_vpc_cidr" {
-  description = "São Paulo VPC CIDR"
-  type        = string
-}
+# variable "sao_paulo_vpc_cidr" {
+#   description = "São Paulo VPC CIDR"
+#   type        = string
+# }
 
 ############################################
 # RDS

@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "tokyo_db_secret" {
-  name = "${var.project_name}/tokyo/rds-v2"
+  name = "${var.project_name}/tokyo/rds-v5"
 }
 
 resource "aws_secretsmanager_secret_version" "tokyo_db_secret_value" {

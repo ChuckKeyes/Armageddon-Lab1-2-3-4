@@ -1,0 +1,96 @@
+############################################
+# TGW Peering: Tokyo <-> São Paulo
+############################################
+
+resource "aws_ec2_transit_gateway_peering_attachment" "tokyo_to_saopaulo" {
+  provider = aws.tokyo
+
+  transit_gateway_id      = "tgw-04a758504cdbb5c89"
+  peer_transit_gateway_id = module.saopaulo_compute.saopaulo_tgw_id
+  peer_region             = "sa-east-1"
+
+  tags = {
+    Name = "lab3cek-tokyo-to-saopaulo-peer"
+  }
+}
+
+resource "aws_ec2_transit_gateway_peering_attachment_accepter" "saopaulo_accept" {
+  provider = aws.saopaulo
+
+  transit_gateway_attachment_id = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  tags = {
+    Name = "lab3cek-saopaulo-accept-peer"
+  }
+}
+#############################################################################################
+
+############################################
+# TGW Route Table Routes (both directions)
+############################################
+
+# data "aws_ec2_transit_gateway" "tokyo_tgw" {
+#   provider           = aws.tokyo
+#   transit_gateway_id = "tgw-04a758504cdbb5c89"
+# }
+
+# data "aws_ec2_transit_gateway" "saopaulo_tgw" {
+#   provider           = aws.saopaulo
+#   transit_gateway_id = module.saopaulo_compute.saopaulo_tgw_id
+# }
+resource "aws_ec2_transit_gateway_route" "tokyo_to_saopaulo" {
+  provider = aws.tokyo
+
+  transit_gateway_route_table_id = var.tokyo_tgw_route_table_id
+  destination_cidr_block         = module.saopaulo_compute.saopaulo_vpc_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  depends_on = [aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept]
+}
+
+resource "aws_ec2_transit_gateway_route" "saopaulo_to_tokyo" {
+  provider = aws.saopaulo
+
+  transit_gateway_route_table_id = "tgw-rtb-08c344798f54cbb5a"
+  destination_cidr_block         = var.tokyo_vpc_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tokyo_to_saopaulo.id
+
+  depends_on = [aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept]
+}
+
+##################################################################################
+
+resource "aws_route" "tokyo_private_to_saopaulo" {
+  provider = aws.tokyo
+  for_each = toset(var.tokyo_private_route_table_ids)
+
+  route_table_id         = each.value
+  destination_cidr_block = module.saopaulo_compute.saopaulo_vpc_cidr
+  transit_gateway_id     = "tgw-04a758504cdbb5c89"
+
+ depends_on = [
+    aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept,
+    aws_ec2_transit_gateway_route.tokyo_to_saopaulo
+  ]
+
+
+}
+###################################################################################
+
+resource "aws_route" "saopaulo_private_to_tokyo" {
+  provider = aws.saopaulo
+
+  route_table_id         = module.saopaulo_compute.saopaulo_private_route_table_id
+  destination_cidr_block = var.tokyo_vpc_cidr
+  transit_gateway_id     = module.saopaulo_compute.saopaulo_tgw_id
+
+depends_on = [
+    aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept,
+    aws_ec2_transit_gateway_route.saopaulo_to_tokyo
+  ]
+
+
+}
+#############################################################################
+
+

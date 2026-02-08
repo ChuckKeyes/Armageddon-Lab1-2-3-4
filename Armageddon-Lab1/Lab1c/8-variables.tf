@@ -135,5 +135,5 @@ variable "bedrock_model_id" {
   type        = string
 }
 
-
+# key_name = var.Lab1c_keypair.pem
 

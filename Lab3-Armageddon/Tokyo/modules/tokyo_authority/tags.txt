@@ -1,0 +1,6 @@
+tags = {
+  Project     = "lab3cek"
+  Lab         = "Lab3"
+  Owner       = "Keyes"
+  Environment = var.environment
+}

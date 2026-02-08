@@ -23,14 +23,14 @@ resource "aws_security_group" "chewbacca_rds_sg01" {
 }
 
 # Allow Postgres from Sao Paulo VPC CIDR (via TGW routing)
-resource "aws_security_group_rule" "shinjuku_rds_ingress_from_liberdade01" {
-  type              = "ingress"
-  security_group_id = aws_security_group.chewbacca_rds_sg01.id
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  cidr_blocks       = [var.sao_paulo_vpc_cidr]
-}
+# resource "aws_security_group_rule" "shinjuku_rds_ingress_from_liberdade01" {
+#   type              = "ingress"
+#   security_group_id = aws_security_group.chewbacca_rds_sg01.id
+#   from_port         = 5432
+#   to_port           = 5432
+#   protocol          = "tcp"
+#   cidr_blocks       = [var.sao_paulo_vpc_cidr]
+# }
 
 # Outbound allowed (RDS usually needs this)
 resource "aws_security_group_rule" "shinjuku_rds_egress_all01" {

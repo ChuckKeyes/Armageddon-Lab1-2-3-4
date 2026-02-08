@@ -28,13 +28,13 @@
 ############################################
 
 # Create the Tokyo -> São Paulo route ONLY when you have a real TGW ID to route to.
-resource "aws_route" "shinjuku_to_sp_route01" {
-  count = (
-    var.tokyo_tgw_id != null && var.tokyo_tgw_id != "" &&
-    var.sao_paulo_vpc_cidr != null && var.sao_paulo_vpc_cidr != ""
-  ) ? 1 : 0
+# resource "aws_route" "shinjuku_to_sp_route01" {
+#   count = (
+#     var.tokyo_tgw_id != null && var.tokyo_tgw_id != "" &&
+#     var.sao_paulo_vpc_cidr != null && var.sao_paulo_vpc_cidr != ""
+#   ) ? 1 : 0
 
-  route_table_id         = aws_route_table.chewbacca_private_rt01.id
-  destination_cidr_block = var.sao_paulo_vpc_cidr
-  transit_gateway_id     = var.tokyo_tgw_id
-}
+#   route_table_id         = aws_route_table.chewbacca_private_rt01.id
+#   destination_cidr_block = var.sao_paulo_vpc_cidr
+#   transit_gateway_id     = var.tokyo_tgw_id
+# }

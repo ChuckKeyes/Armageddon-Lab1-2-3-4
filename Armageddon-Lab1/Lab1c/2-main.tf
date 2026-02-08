@@ -133,34 +133,18 @@ resource "aws_route_table_association" "ceklab1_private_rta" {
   route_table_id = aws_route_table.ceklab1_private_rt01.id
 }
 
-############################################
-# Security Groups (EC2 + RDS)
-############################################
 
-# Explanation: EC2 SG is ceklab1’s bodyguard—only let in what you mean to.
-resource "aws_security_group" "ceklab1_ec2_sg01" {
-  name        = "${local.name_prefix}-ec2-sg01"
-  description = "EC2 app security group"
-  vpc_id      = aws_vpc.ceklab1_vpc01.id
 
-  # TODO: student adds inbound rules (HTTP 80, SSH 22 from their IP)
-  # TODO: student ensures outbound allows DB port to RDS SG (or allow all outbound)
 
-  tags = {
-    Name = "${local.name_prefix}-ec2-sg01"
-  }
-}
 
-# Explanation: RDS SG is the Rebel vault—only the app server gets a keycard.
-resource "aws_security_group" "ceklab1_rds_sg01" {
-  name        = "${local.name_prefix}-rds-sg01"
-  description = "RDS security group"
-  vpc_id      = aws_vpc.ceklab1_vpc01.id
-  # vpc_security_group_ids = [aws_security_group.app_sg.id]
-}
+
+
+
+
+
 resource "aws_security_group" "alb_sg" {
   name   = "${var.project_name}-alb-sg"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.ceklab1_vpc01.id
 
   ingress {
     from_port   = 80
@@ -184,55 +168,39 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+# resource "aws_security_group_rule" "ec2_allow_http" {
+#   type              = "ingress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "tcp"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.ceklab1_ec2_sg01.id
+# }
+
+resource "aws_security_group_rule" "ceklab1_ec2_allow_ssh" {
+  type              = "ingress"
+  security_group_id = aws_security_group.ceklab1_ec2_sg01.id
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/32"]
+}
+
 
   # TODO: student adds inbound MySQL 3306 from aws_security_group.ceklab1_ec2_sg01.id
+# Explanation: RDS SG is the Rebel vault—only the app server gets a keycard.
+# resource "aws_security_group" "ceklab1_rds_sg01" {
+#   name        = "${local.name_prefix}-rds-sg01"
+#   description = "RDS security group"
+#   vpc_id      = aws_vpc.ceklab1_vpc01.id
+# }
+
+
 
   # tags = {
   #   Name = "${local.name_prefix}-rds-sg01"
   # }
 
-
-############################################
-# RDS Subnet Group
-############################################
-
-# Explanation: RDS hides in private subnets like the Rebel base on Hoth—cold, quiet, and not public.
-resource "aws_db_subnet_group" "ceklab1_rds_subnet_group01" {
-  name       = "${local.name_prefix}-rds-subnet-group01"
-  subnet_ids = aws_subnet.ceklab1_private_subnets[*].id
-  # vpc_security_group_ids = [aws_security_group.rds_sg.id]
-
-  tags = {
-    Name = "${local.name_prefix}-rds-subnet-group01"
-  }
-}
-
-############################################
-# RDS Instance (MySQL)
-############################################
-
-# Explanation: This is the holocron of state—your relational data lives here, not on the EC2.
-resource "aws_db_instance" "ceklab1_rds01" {
-  identifier             = "${local.name_prefix}-rds01"
-  engine                 = var.db_engine
-  instance_class         = var.db_instance_class
-  allocated_storage      = 20
-  db_name                = var.db_name
-  username               = var.db_username
-  password               = var.db_password
-
-  db_subnet_group_name   = aws_db_subnet_group.ceklab1_rds_subnet_group01.name
-  vpc_security_group_ids = [aws_security_group.ceklab1_rds_sg01.id]
-
-  publicly_accessible    = false
-  skip_final_snapshot    = true
-
-  # TODO: student sets multi_az / backups / monitoring as stretch goals
-
-  tags = {
-    Name = "${local.name_prefix}-rds01"
-  }
-}
 
 ############################################
 # IAM Role + Instance Profile for EC2
@@ -281,20 +249,11 @@ resource "aws_iam_instance_profile" "ceklab1_instance_profile01" {
 ############################################
 
 # Explanation: This is your “Han Solo box”—it talks to RDS and complains loudly when the DB is down.
-resource "aws_instance" "ceklab1_ec201" {
-  ami                    = var.ec2_ami_id
-  instance_type           = var.ec2_instance_type
-  subnet_id               = aws_subnet.ceklab1_public_subnets[0].id
-  vpc_security_group_ids  = [aws_security_group.ceklab1_ec2_sg01.id]
-  iam_instance_profile    = aws_iam_instance_profile.ceklab1_instance_profile01.name
 
   # TODO: student supplies user_data to install app + CW agent + configure log shipping
   # user_data = file("${path.module}/user_data.sh")
 
-  tags = {
-    Name = "${local.name_prefix}-ec201"
-  }
-}
+  
 
 ############################################
 # Parameter Store (SSM Parameters)
@@ -333,27 +292,6 @@ resource "aws_ssm_parameter" "ceklab1_db_name_param" {
   }
 }
 
-############################################
-# Secrets Manager (DB Credentials)
-############################################
-
-# Explanation: Secrets Manager is ceklab1’s locked holster—credentials go here, not in code.
-resource "aws_secretsmanager_secret" "ceklab1_db_secret01" {
-  name = "${local.name_prefix}/rds/mysql-v6"
-}
-
-# Explanation: Secret payload—students should align this structure with their app (and support rotation later).
-resource "aws_secretsmanager_secret_version" "ceklab1_db_secret_version01" {
-  secret_id = aws_secretsmanager_secret.ceklab1_db_secret01.id
-
-  secret_string = jsonencode({
-    username = var.db_username
-    password = var.db_password
-    host     = aws_db_instance.ceklab1_rds01.address
-    port     = aws_db_instance.ceklab1_rds01.port
-    dbname   = var.db_name
-  })
-}
 
 ############################################
 # CloudWatch Logs (Log Group)
@@ -418,65 +356,65 @@ resource "aws_sns_topic_subscription" "ceklab1_sns_sub01" {
 
 ##########################################################################################################
 ##########################################################################################################
-module "bonus_a" {
-  source = "./modules/bonus_a"
+# module "bonus_a" {
+#   source = "./modules/bonus_a"
 
-  project_name              = var.project_name
-  vpc_id                    = aws_vpc.ceklab1_vpc01.id
-  private_subnet_ids = aws_subnet.ceklab1_private_subnets[*].id
+#   project_name              = var.project_name
+#   vpc_id                    = aws_vpc.ceklab1_vpc01.id
+#   private_subnet_ids = aws_subnet.ceklab1_private_subnets[*].id
 
 
 
-  private_route_table_ids   = [aws_route_table.ceklab1_private_rt01.id]
+#   private_route_table_ids   = [aws_route_table.ceklab1_private_rt01.id]
 
-  ec2_ami_id                = var.ec2_ami_id
-  ec2_instance_type         = var.ec2_instance_type
-  ec2_security_group_id     = aws_security_group.ceklab1_ec2_sg01.id
-  iam_instance_profile_name = aws_iam_instance_profile.ceklab1_instance_profile01.name
+#   ec2_ami_id                = var.ec2_ami_id
+#   ec2_instance_type         = var.ec2_instance_type
+#   ec2_security_group_id     = aws_security_group.ceklab1_ec2_sg01.id
+#   iam_instance_profile_name = aws_iam_instance_profile.ceklab1_instance_profile01.name
 
-  secret_arn                = var.db_secret_arn
-  cloudwatch_log_group_arn  = aws_cloudwatch_log_group.ceklab1_log_group01.arn
+#   secret_arn                = var.db_secret_arn
+#   cloudwatch_log_group_arn  = aws_cloudwatch_log_group.ceklab1_log_group01.arn
 
-  create_private_instance   = true
-}
+#   create_private_instance   = true
+# }
 
 ####################################################################################
 ####################################################################################
 
-module "ceklab1c_b" {
-  source = "./modules/bonus_b"
+# module "ceklab1c_b" {
+#   source = "./modules/bonus_b"
 
-  project_name        = var.project_name
-  aws_region          = var.aws_region
+#   project_name        = var.project_name
+#   aws_region          = var.aws_region
 
-  vpc_id              = aws_vpc.ceklab1_vpc01.id
-  public_subnet_ids   = aws_subnet.ceklab1_public_subnets[*].id
+#   vpc_id              = aws_vpc.ceklab1_vpc01.id
+#   public_subnet_ids   = aws_subnet.ceklab1_public_subnets[*].id
 
-  # private EC2 you want behind the ALB
-  target_instance_id  = module.bonus_a.private_instance_id   # OR paste your instance id output
-  target_port         = 80
-  health_check_path   = "/"
+#   # private EC2 you want behind the ALB
+#   target_instance_id  = module.bonus_a.private_instance_id   # OR paste your instance id output
+#   target_port         = 80
+#   health_check_path   = "/"
 
-  # security group of that private EC2 (ALB will be allowed to reach it)
-  target_ec2_sg_id    = aws_security_group.ceklab1_ec2_sg01.id
+#   # security group of that private EC2 (ALB will be allowed to reach it)
+#   target_ec2_sg_id    = aws_security_group.ceklab1_ec2_sg01.id
 
-  # DNS/TLS
-  domain_name         = var.domain_name
-  app_subdomain       = var.app_subdomain
+#   # DNS/TLS
+#   domain_name         = var.domain_name
+#   app_subdomain       = var.app_subdomain
  
 
-  enable_waf          = true
+#   enable_waf          = true
 
-  # monitoring
-  sns_topic_arn       = aws_sns_topic.ceklab1_sns_topic01.arn
-  alb_5xx_threshold   = 1
-  alb_5xx_period      = 300
-  alb_5xx_eval_periods = 1
+#   # monitoring
+#   sns_topic_arn       = aws_sns_topic.ceklab1_sns_topic01.arn
+#   alb_5xx_threshold   = 1
+#   alb_5xx_period      = 300
+#   alb_5xx_eval_periods = 1
 
-  manage_route53_in_terraform = var.manage_route53_in_terraform
-route53_hosted_zone_id      = var.route53_zone_id
+#   manage_route53_in_terraform = var.manage_route53_in_terraform
+# route53_hosted_zone_id      = var.route53_zone_id
 
-}
+# }
 
 ################################################################################################
 resource "aws_sns_topic" "ir_incident_topic" {
@@ -486,17 +424,17 @@ resource "aws_sns_topic" "ir_incident_topic" {
 
 
 ################################################################################################
-module "bonus_g_bedrock" {
-  source = "./modules/bonus_g_bedrock"
+# module "bonus_g_bedrock" {
+#   source = "./modules/bonus_g_bedrock"
 
-  project_name     = var.project_name
-  sns_topic_arn    = aws_sns_topic.ir_incident_topic.arn
-  bedrock_model_id = var.bedrock_model_id
-  app_log_group    = "/aws/ec2/${var.project_name}-rds-app"
-  waf_log_group    = "aws-waf-logs-${var.project_name}-webacl01"
+#   project_name     = var.project_name
+#   sns_topic_arn    = aws_sns_topic.ir_incident_topic.arn
+#   bedrock_model_id = var.bedrock_model_id
+#   app_log_group    = "/aws/ec2/${var.project_name}-rds-app"
+#   waf_log_group    = "aws-waf-logs-${var.project_name}-webacl01"
   
 
-}
+# }
 
 
 

@@ -1,0 +1,10 @@
+Tokyo key IDs (save these)
+
+VPC: vpc-09b45892ea144b969
+
+CIDR: 10.10.0.0/16
+
+Private RT: rtb-044bb7ef151f213b0
+
+RDS SG: sg-0649a7c87f30e5791
+
