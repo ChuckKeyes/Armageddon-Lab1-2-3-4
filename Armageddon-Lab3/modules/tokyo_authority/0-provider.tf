@@ -1,10 +1,15 @@
-# Tokyo provider (default)
-provider "aws" {
-  region = "ap-northeast-1"
-}
+terraform {
+  required_version = ">= 1.5.0"
 
-# Sao Paulo provider
-provider "aws" {
-  alias  = "saopaulo"
-  region = "sa-east-1"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+
+      # IMPORTANT: allow provider aliases passed from root
+      configuration_aliases = [
+        aws.us_east_1
+      ]
+    }
+  }
 }

@@ -1,43 +1,87 @@
 terraform {
-  required_version = ">= 1.7.0"
-
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.60"
+      version = "~> 5.0"
     }
   }
 }
 
+# provider "aws" {
+#   alias  = "tokyo"
+#   region = "ap-northeast-1"
+# }
+
+# provider "aws" {
+#   alias  = "saopaulo"
+#   region = "sa-east-1"
+# }
 
 
 
 
-module "tokyo" {
+
+#########################################################################################
+############################################
+# Tokyo Authority Module
+############################################
+module "tokyo_authority" {
   source = "./modules/tokyo_authority"
 
+  providers = {
+    aws           = aws.tokyo
+    aws.us_east_1 = aws.us_east_1
+  }
+
+  # Naming / metadata
+  name_prefix  = var.name_prefix
   project_name = var.project_name
   environment  = var.environment
   tags         = var.tags
 
-  vpc_name = var.vpc_name
-  vpc_cidr = var.vpc_cidr
+  # VPC (inputs the module expects)
+  vpc_name       = var.vpc_name
+  vpc_cidr       = var.vpc_cidr
+  tokyo_vpc_cidr = var.tokyo_vpc_cidr
+  tokyo_public_subnet_cidr01 = var.tokyo_public_subnet_cidr01
+  tokyo_public_subnet_cidr02 = var.tokyo_public_subnet_cidr02
+  # EC2
+  tokyo_ami_id        = var.tokyo_ami_id
+  instance_type       = var.instance_type
+  # tokyo_app_subnet_id = var.tokyo_app_subnet_id
 
-  tokyo_vpc_cidr              = var.tokyo_vpc_cidr
-  tokyo_private_subnet_cidr01 = var.tokyo_private_subnet_cidr01
+  # Database
+  db_name     = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+
+  # RDS subnet group
+  # tokyo_private_subnet_ids    = var.tokyo_private_subnet_ids
   tokyo_private_subnet_cidr02 = var.tokyo_private_subnet_cidr02
 
-  rds_db_name  = var.rds_db_name
-  rds_username = var.rds_username
-  rds_password = var.rds_password
+  # Required by module (for now)
+  # tokyo_vpc_id = var.tokyo_vpc_id
 
-  # these are only here because your module currently requires them
-  # tokyo_tgw_id                 = var.tokyo_tgw_id
- # tokyo_private_route_table_id = var.tokyo_private_route_table_id
+ # domain_name = "keyescloudsolutions.com"
+  domain_name        = var.domain_name
+  origin_domain_name = var.origin_domain_name
+  enable_apex        = var.enable_apex
 
-   # sao_paulo_vpc_cidr = var.sao_paulo_vpc_cidr
-   # liberdade_tgw_id   = var.liberdade_tgw_id
 }
+
+
+
+############################################
+# Root Outputs (optional convenience)
+############################################
+# output "tokyo_cloudfront_domain_name" {
+#   value = module.tokyo_authority.cloudfront_domain_name
+# }
+
+# output "tokyo_app_fqdn" {
+#   value = module.tokyo_authority.app_fqdn
+# }
+
 ####################################################################
 ####################################################################
 ####################################################################
@@ -48,25 +92,46 @@ module "tokyo" {
 
 module "saopaulo_compute" {
   source = "./modules/saopaulo_compute"
-  # providers = { aws = aws.saopaulo }
+
+
+
+  # REQUIRED: module uses provider = aws.saopaulo
+#  provider "aws" {
+#   region = "ap-northeast-1"
+# }
+
+# provider "aws" {
+#   alias  = "saopaulo"
+#   region = "sa-east-1"
+# }
+
+ providers = {
+    aws         = aws.saopaulo
+    aws.saopaulo = aws.saopaulo
+  }
+
 
   project_name = var.project_name
   name_prefix  = "liberdade"
 
-  liberdade_vpc_cidr               = var.saopaulo_vpc_cidr
-  liberdade_private_subnet01_cidr  = var.saopaulo_private_subnet_cidrs[0]
-  liberdade_private_subnet02_cidr  = var.saopaulo_private_subnet_cidrs[1]
+  liberdade_vpc_cidr              = var.saopaulo_vpc_cidr
+  liberdade_private_subnet01_cidr = var.saopaulo_private_subnet_cidrs[0]
+  liberdade_private_subnet02_cidr = var.saopaulo_private_subnet_cidrs[1]
 
   saopaulo_az1 = var.saopaulo_az1
   saopaulo_az2 = var.saopaulo_az2
-  ami_id = var.saopaulo_ami_id
+  ami_id       = var.saopaulo_ami_id
 
 
-  tokyo_tgw_id   = module.tokyo.tokyo_tgw_id
-  tokyo_vpc_cidr = module.tokyo.vpc_cidr
-  tokyo_vpc_id    = module.tokyo.vpc_id
-  tokyo_rds_sg_id = module.tokyo.rds_sg_id
-  
+  enable_tokyo_integration = true
+
+  # ✅ TGW attach targets Tokyo TGW
+ tokyo_tgw_id   = module.tokyo_authority.tokyo_tgw_id
+ tokyo_vpc_cidr = module.tokyo_authority.vpc_cidr
+ tokyo_vpc_id   = module.tokyo_authority.vpc_id
+ tokyo_rds_sg_id = module.tokyo_authority.rds_sg_id
+
+
 
 
   tags = {

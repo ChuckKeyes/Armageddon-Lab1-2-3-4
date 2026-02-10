@@ -68,7 +68,7 @@ resource "aws_route" "tokyo_private_to_saopaulo" {
   destination_cidr_block = module.saopaulo_compute.saopaulo_vpc_cidr
   transit_gateway_id     = "tgw-04a758504cdbb5c89"
 
- depends_on = [
+  depends_on = [
     aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept,
     aws_ec2_transit_gateway_route.tokyo_to_saopaulo
   ]
@@ -84,7 +84,7 @@ resource "aws_route" "saopaulo_private_to_tokyo" {
   destination_cidr_block = var.tokyo_vpc_cidr
   transit_gateway_id     = module.saopaulo_compute.saopaulo_tgw_id
 
-depends_on = [
+  depends_on = [
     aws_ec2_transit_gateway_peering_attachment_accepter.saopaulo_accept,
     aws_ec2_transit_gateway_route.saopaulo_to_tokyo
   ]

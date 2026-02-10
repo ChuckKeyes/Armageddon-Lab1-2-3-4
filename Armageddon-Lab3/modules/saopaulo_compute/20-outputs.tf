@@ -27,16 +27,25 @@ output "saopaulo_private_subnet_ids" {
   ]
 }
 
-# output "saopaulo_tgw_id" {
-#   description = "São Paulo TGW ID"
-#   value       = aws_ec2_transit_gateway.saopaulo_tgw.id
-# }
-
-output "saopaulo_tgw_vpc_attachment_id" {
-  description = "São Paulo VPC attachment to TGW ID"
-  value       = aws_ec2_transit_gateway_vpc_attachment.saopaulo_vpc_attach.id
+output "saopaulo_to_tokyo_attachment_id" {
+  value = try(
+    aws_ec2_transit_gateway_vpc_attachment.liberdade_to_tokyo[0].id,
+    null
+  )
 }
+
+
+
 
 output "saopaulo_private_route_table_id" {
   value = aws_route_table.liberdade_private_rt01.id
+}
+
+
+output "saopaulo_client_instance_id" {
+  value = aws_instance.saopaulo_client_ec2.id
+}
+
+output "saopaulo_client_private_ip" {
+  value = aws_instance.saopaulo_client_ec2.private_ip
 }

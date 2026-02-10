@@ -73,3 +73,12 @@ var.saopaulo_private_subnet_cidrs → ["10.20.10.0/24","10.20.11.0/24"]
 var.saopaulo_public_subnet_cidrs → ["10.20.20.0/24","10.20.21.0/24"]
 
 var.saopaulo_vpc_cidr → 10.20.0.0/16
+##################################################################
+
+Wire this cleanly into root main.tf
+
+Add Tokyo → São Paulo return routes
+
+Add SSM-only access (no SSH)
+
+Or generate a diagram + checklist for Lab3 submission

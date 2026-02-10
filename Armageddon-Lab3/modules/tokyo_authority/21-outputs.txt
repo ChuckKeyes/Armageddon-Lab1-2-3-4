@@ -1,0 +1,80 @@
+############################################
+# VPC/Subnets
+############################################
+output "vpc_id" {
+  value = aws_vpc.chewbacca_vpc01.id
+}
+
+output "public_subnet_ids" {
+  value = [
+    aws_subnet.chewbacca_public_subnet01.id,
+    aws_subnet.chewbacca_public_subnet02.id
+  ]
+}
+
+output "private_subnet_ids" {
+  value = [
+    aws_subnet.chewbacca_private_subnet01.id,
+    aws_subnet.chewbacca_private_subnet02.id
+  ]
+}
+
+############################################
+# EC2
+############################################
+output "ec2_public_ip" {
+  value       = try(aws_instance.tokyo_app_ec2.public_ip, null)
+  description = "Public IP of app EC2 (only if in public subnet)"
+}
+
+output "ec2_public_dns" {
+  value       = try(aws_instance.tokyo_app_ec2.public_dns, null)
+  description = "Public DNS of app EC2 (only if in public subnet)"
+}
+
+############################################
+# RDS
+############################################
+output "rds_endpoint" {
+  value       = aws_db_instance.tokyo_rds.address
+  description = "RDS endpoint hostname"
+}
+
+output "rds_port" {
+  value       = aws_db_instance.tokyo_rds.port
+  description = "RDS port"
+}
+
+output "rds_sg_id" {
+  value       = aws_security_group.tokyo_rds_sg.id
+  description = "RDS security group ID"
+}
+
+############################################
+# ALB (if you add 34-alb.tf)
+############################################
+output "alb_dns_name" {
+  value       = try(aws_lb.tokyo_alb.dns_name, null)
+  description = "ALB DNS name"
+}
+
+############################################
+# CloudFront (if you add 33-cloudfront.tf)
+############################################
+output "cloudfront_domain_name" {
+  value       = try(aws_cloudfront_distribution.app_cdn.domain_name, null)
+  description = "CloudFront distribution domain name"
+}
+
+output "cloudfront_distribution_id" {
+  value       = try(aws_cloudfront_distribution.app_cdn.id, null)
+  description = "CloudFront distribution id"
+}
+
+############################################
+# App FQDN (what users type)
+############################################
+output "app_fqdn" {
+  value       = "${var.app_subdomain}.${var.domain_name}"
+  description = "App fully-qualified domain name"
+}

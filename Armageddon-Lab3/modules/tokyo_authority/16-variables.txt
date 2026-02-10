@@ -1,0 +1,98 @@
+############################################
+# DNS / CloudFront
+############################################
+variable "domain_name" {
+  type        = string
+  description = "Base domain, e.g. keyescloudsolutions.com"
+}
+
+variable "app_subdomain" {
+  type        = string
+  description = "Subdomain for the app, e.g. www"
+  default     = "www"
+}
+
+variable "route53_zone_id" {
+  type        = string
+  description = "Optional: Route53 hosted zone id. If null, module will look it up by domain_name."
+  default     = null
+}
+
+variable "enable_apex" {
+  type        = bool
+  description = "If true, include apex domain as SAN + CloudFront alias"
+  default     = true
+}
+
+############################################
+# EC2
+############################################
+variable "tokyo_ami_id" {
+  type        = string
+  description = "AMI ID for Tokyo EC2 instance"
+}
+
+variable "instance_type" {
+  type        = string
+  description = "EC2 instance type"
+  default     = "t3.micro"
+}
+
+variable "app_port" {
+  type        = number
+  description = "App port on EC2 / Target Group"
+  default     = 80
+}
+
+variable "health_check_path" {
+  type        = string
+  description = "ALB health check path"
+  default     = "/"
+}
+
+############################################
+# RDS
+############################################
+variable "db_name" {
+  type        = string
+  description = "RDS database name"
+}
+
+variable "db_username" {
+  type        = string
+  description = "RDS master username"
+}
+
+variable "db_password" {
+  type        = string
+  description = "RDS master password"
+  sensitive   = true
+}
+
+############################################
+# Subnet CIDRs (module owns subnets; root passes CIDRs only)
+############################################
+variable "tokyo_vpc_cidr" {
+  type        = string
+  description = "Tokyo VPC CIDR"
+}
+
+variable "tokyo_public_subnet_cidr01" {
+  type        = string
+  description = "Tokyo public subnet 1 CIDR"
+}
+
+variable "tokyo_public_subnet_cidr02" {
+  type        = string
+  description = "Tokyo public subnet 2 CIDR"
+}
+
+variable "tokyo_private_subnet_cidr01" {
+  type        = string
+  description = "Tokyo private subnet 1 CIDR"
+}
+
+variable "tokyo_private_subnet_cidr02" {
+  type        = string
+  description = "Tokyo private subnet 2 CIDR"
+}

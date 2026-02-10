@@ -14,10 +14,21 @@ variable "vpc_cidr"  { type = string }
 variable "tokyo_vpc_cidr"              { type = string }
 variable "tokyo_private_subnet_cidr01" { type = string }
 variable "tokyo_private_subnet_cidr02" { type = string }
+variable "tokyo_app_subnet_id" {
+  type = string
+}
+variable "tokyo_public_subnet_ids" {
+  type = list(string)
+  default = [
+    "subnet-00a075b915e11941d",
+    "subnet-00958f0ba49814af6"
+  ]
+}
 
-variable "rds_db_name" { type = string }
-variable "rds_username" { type = string }
-variable "rds_password" { type = string }
+
+# variable "db_name" { type = string }
+# variable "db_username" { type = string }
+# variable "db_password" { type = string }
 
 # If your tokyo module still requires these right now:
 
@@ -35,6 +46,53 @@ variable "tokyo_private_route_table_ids" {
   type    = list(string)
   default = ["rtb-0029ea9f5ecc56557"]
 }
+
+variable "name_prefix" { type = string }
+
+variable "tokyo_private_subnet_ids" {
+  type = list(string)
+}
+
+variable "tokyo_public_subnet_cidr01" { type = string }
+
+variable "tokyo_public_subnet_cidr02" {
+  type = string
+}
+
+
+
+variable "tokyo_vpc_id" {
+  type = string
+  default = null
+}
+
+
+
+
+variable "domain_name"  { type = string }     # "keyescloudsolutions.com"
+variable "app_subdomain" { type = string }    # "www"
+
+variable "tokyo_ami_id"  { type = string }
+variable "instance_type" { type = string }
+
+variable "db_name"     { type = string }
+variable "db_username" { type = string }
+variable "db_password" { 
+          type = string
+          sensitive = true 
+          }
+
+variable "origin_domain_name" { type = string }
+variable "enable_apex" { 
+  type = bool 
+  default = true 
+  }
+
+
+
+
+
+
 
 
 ###########################################################################

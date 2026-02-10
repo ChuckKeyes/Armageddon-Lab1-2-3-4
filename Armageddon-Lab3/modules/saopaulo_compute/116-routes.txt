@@ -1,0 +1,6 @@
+#############################################################################
+resource "aws_route" "sp_to_tokyo_via_tgw" {
+  route_table_id         = aws_route_table.liberdade_private_rt01.id
+  destination_cidr_block = var.tokyo_vpc_cidr
+  transit_gateway_id     = var.saopaulo_tgw_id
+}

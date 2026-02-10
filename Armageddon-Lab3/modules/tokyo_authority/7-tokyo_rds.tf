@@ -38,9 +38,9 @@ resource "aws_db_instance" "chewbacca_rds_tokyo" {
   storage_type      = "gp3"
   storage_encrypted = true
 
-  db_name  = var.rds_db_name
-  username = var.rds_username
-  password = var.rds_password
+  db_name  = var.db_name
+  username = var.db_username
+  password = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.chewbacca_rds_subnet_group_tokyo.name
   vpc_security_group_ids = [aws_security_group.chewbacca_rds_sg01.id]

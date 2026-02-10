@@ -1,0 +1,34 @@
+vpc_name = "armageddon-tokyo"
+vpc_cidr = "10.10.0.0/16"
+
+tags = {
+  Owner   = "KeyesCloudSolutions"
+  Project = "Armageddon-Tokyo"
+}
+
+project_name = "japan-med"
+environment  = "dev"
+
+tokyo_vpc_cidr              = "10.10.0.0/16"
+tokyo_private_subnet_cidr01 = "10.10.10.0/24"
+tokyo_private_subnet_cidr02 = "10.10.20.0/24"
+
+# liberdade_tgw_id   = "tgw-023aa46f3e6c08a80"
+# sao_paulo_vpc_cidr = "10.20.0.0/16"
+
+# liberdade_tgw_id = "tgw-023aa46f3e6c08a80"
+
+rds_db_name  = "cek"
+rds_username = "cekadmin"
+rds_password = "Nicholas111317!"
+
+variable "tokyo_vpc_id" { type = string }
+variable "tokyo_private_subnet_ids" { type = list(string) }
+
+
+# tokyo_vpc_cidr     = "10.10.0.0/16"
+# sao_paulo_vpc_cidr = "10.20.0.0/16"
+# tags = {
+#   Owner   = "KeyesCloudSolutions"
+#   Project = "Armageddon-Tokyo"
+# }

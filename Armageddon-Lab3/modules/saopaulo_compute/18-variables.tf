@@ -72,19 +72,7 @@ variable "tokyo_vpc_cidr" {
 # Optional: TGW peering attachment accepter id
 # (so you don't hardcode it in the resource)
 ############################################
-variable "tokyo_to_saopaulo_tgw_attachment_id" {
-  description = "TGW peering attachment ID created on the Tokyo side that Sao Paulo must accept (tgw-attach-xxxxxxxx)."
-  type        = string
-  default     = null
 
-  validation {
-    condition = (
-      var.tokyo_to_saopaulo_tgw_attachment_id == null
-      || can(regex("^tgw-attach-[0-9a-f]+$", var.tokyo_to_saopaulo_tgw_attachment_id))
-    )
-    error_message = "tokyo_to_saopaulo_tgw_attachment_id must look like tgw-attach-<hex>."
-  }
-}
 
 variable "tokyo_vpc_id" {
   description = "Tokyo VPC ID"
@@ -101,17 +89,6 @@ variable "tokyo_rds_sg_id" {
 #   type        = list(string)
 #   default     = []
 # }
-
-variable "enable_tgw_peering" {
-  description = "Whether to create/accept TGW peering between Tokyo and Sao Paulo"
-  type        = bool
-  default     = false
-}
-
-variable "tokyo_peer_attachment_id" {
-  type    = string
-  default = null
-}
 
 variable "project_name" {
   description = "Project name prefix for resource naming"
@@ -134,7 +111,7 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-variable "name_prefix"  { type = string }
+variable "name_prefix" { type = string }
 
 ############################
 # EC2 / Compute
@@ -169,3 +146,19 @@ variable "saopaulo_tgw_asn" {
   type        = number
   default     = 64521
 }
+
+
+variable "client_instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+variable "key_name" {
+  type        = string
+  default     = null
+  description = "Optional SSH key name (leave null if using SSM later)"
+}
+
+# Already in your module call, but ensure these exist:
+# variable "tokyo_vpc_cidr" { type = string }
+# variable "ami_id" { type = string }

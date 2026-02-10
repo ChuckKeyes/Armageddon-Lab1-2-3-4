@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "tokyo_db_secret" {
-  name = "${var.project_name}/tokyo/rds-v5"
+  name = "${var.project_name}/tokyo/rds-v6"
 }
 
 resource "aws_secretsmanager_secret_version" "tokyo_db_secret_value" {
@@ -7,9 +7,9 @@ resource "aws_secretsmanager_secret_version" "tokyo_db_secret_value" {
 
   secret_string = jsonencode(
     {
-      username = var.rds_username
-      password = var.rds_password
-      dbname   = var.rds_db_name
+      username = var.db_username
+      password = var.db_password
+      dbname   = var.db_name
     }
   )
 }

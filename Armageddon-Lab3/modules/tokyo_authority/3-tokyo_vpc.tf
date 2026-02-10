@@ -44,3 +44,52 @@ resource "aws_route_table_association" "chewbacca_private_assoc02" {
   subnet_id      = aws_subnet.chewbacca_private_subnet02.id
   route_table_id = aws_route_table.chewbacca_private_rt01.id
 }
+
+# One PUBLIC subnet for the app (same VPC)
+resource "aws_subnet" "chewbacca_public_subnet01" {
+  vpc_id                  = aws_vpc.chewbacca_vpc01.id
+  cidr_block              = var.tokyo_public_subnet_cidr01
+  availability_zone       = "ap-northeast-1a"
+  map_public_ip_on_launch = true
+
+  tags = { Name = "${var.project_name}-tokyo-public-01" }
+}
+
+resource "aws_subnet" "chewbacca_public_subnet02" {
+  vpc_id                  = aws_vpc.chewbacca_vpc01.id
+  cidr_block              = var.tokyo_public_subnet_cidr02
+  availability_zone       = "ap-northeast-1c"
+  map_public_ip_on_launch = true
+
+  tags = { Name = "${var.project_name}-tokyo-public-02" }
+}
+
+resource "aws_route_table_association" "chewbacca_public_assoc02" {
+  subnet_id      = aws_subnet.chewbacca_public_subnet02.id
+  route_table_id = aws_route_table.chewbacca_public_rt01.id
+}
+
+
+
+
+
+resource "aws_internet_gateway" "chewbacca_igw01" {
+  vpc_id = aws_vpc.chewbacca_vpc01.id
+  tags   = { Name = "${var.project_name}-tokyo-igw01" }
+}
+
+resource "aws_route_table" "chewbacca_public_rt01" {
+  vpc_id = aws_vpc.chewbacca_vpc01.id
+  tags   = { Name = "${var.project_name}-tokyo-public-rt01" }
+}
+
+resource "aws_route" "chewbacca_public_internet" {
+  route_table_id         = aws_route_table.chewbacca_public_rt01.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.chewbacca_igw01.id
+}
+
+resource "aws_route_table_association" "chewbacca_public_assoc01" {
+  subnet_id      = aws_subnet.chewbacca_public_subnet01.id
+  route_table_id = aws_route_table.chewbacca_public_rt01.id
+}
