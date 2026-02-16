@@ -43,8 +43,17 @@ module "tokyo_authority" {
   vpc_name       = var.vpc_name
   vpc_cidr       = var.vpc_cidr
   tokyo_vpc_cidr = var.tokyo_vpc_cidr
-  tokyo_public_subnet_cidr01 = var.tokyo_public_subnet_cidr01
-  tokyo_public_subnet_cidr02 = var.tokyo_public_subnet_cidr02
+ # existing_tokyo_vpc_id     = var.tokyo_existing_vpc_id
+
+
+  tokyo_private_subnet01_cidr = var.tokyo_private_subnet01_cidr
+  tokyo_private_subnet02_cidr = var.tokyo_private_subnet02_cidr
+  tokyo_public_subnet01_cidr  = var.tokyo_public_subnet01_cidr
+  tokyo_public_subnet02_cidr  = var.tokyo_public_subnet02_cidr
+
+   
+  # existing_tokyo_subnet_ids = var.tokyo_existing_subnet_ids
+
   # EC2
   tokyo_ami_id        = var.tokyo_ami_id
   instance_type       = var.instance_type
@@ -57,8 +66,9 @@ module "tokyo_authority" {
 
   # RDS subnet group
   # tokyo_private_subnet_ids    = var.tokyo_private_subnet_ids
-  tokyo_private_subnet_cidr02 = var.tokyo_private_subnet_cidr02
-
+  
+  # tokyo_db_secret_name = "ceklab1/tokyo/rds-v2"
+  tokyo_db_secret_name = "armageddon-tokyo/tokyo/rds-v7"
   # Required by module (for now)
   # tokyo_vpc_id = var.tokyo_vpc_id
 
@@ -90,56 +100,56 @@ module "tokyo_authority" {
 # Sao Paulo – Compute Module Call
 ############################################
 
-module "saopaulo_compute" {
-  source = "./modules/saopaulo_compute"
+# module "saopaulo_compute" {
+#   source = "./modules/saopaulo_compute"
 
 
 
-  # REQUIRED: module uses provider = aws.saopaulo
-#  provider "aws" {
-#   region = "ap-northeast-1"
+#   # REQUIRED: module uses provider = aws.saopaulo
+# #  provider "aws" {
+# #   region = "ap-northeast-1"
+# # }
+
+# # provider "aws" {
+# #   alias  = "saopaulo"
+# #   region = "sa-east-1"
+# # }
+
+#  providers = {
+#     aws         = aws.saopaulo
+#     aws.saopaulo = aws.saopaulo
+#   }
+
+
+#   project_name = var.project_name
+#   name_prefix  = "liberdade"
+
+#   liberdade_vpc_cidr              = var.saopaulo_vpc_cidr
+#   liberdade_private_subnet01_cidr = var.saopaulo_private_subnet_cidrs[0]
+#   liberdade_private_subnet02_cidr = var.saopaulo_private_subnet_cidrs[1]
+
+#   saopaulo_az1 = var.saopaulo_az1
+#   saopaulo_az2 = var.saopaulo_az2
+#   ami_id       = var.saopaulo_ami_id
+
+
+#   enable_tokyo_integration = true
+
+#   # ✅ TGW attach targets Tokyo TGW
+#  tokyo_tgw_id   = module.tokyo_authority.tokyo_tgw_id
+#  tokyo_vpc_cidr = module.tokyo_authority.vpc_cidr
+#  tokyo_vpc_id   = module.tokyo_authority.vpc_id
+#  tokyo_rds_sg_id = module.tokyo_authority.rds_sg_id
+
+
+
+
+#   tags = {
+#     Project = var.project_name
+#     Region  = "sa-east-1"
+#     Role    = "tgw-attach"
+#   }
 # }
-
-# provider "aws" {
-#   alias  = "saopaulo"
-#   region = "sa-east-1"
-# }
-
- providers = {
-    aws         = aws.saopaulo
-    aws.saopaulo = aws.saopaulo
-  }
-
-
-  project_name = var.project_name
-  name_prefix  = "liberdade"
-
-  liberdade_vpc_cidr              = var.saopaulo_vpc_cidr
-  liberdade_private_subnet01_cidr = var.saopaulo_private_subnet_cidrs[0]
-  liberdade_private_subnet02_cidr = var.saopaulo_private_subnet_cidrs[1]
-
-  saopaulo_az1 = var.saopaulo_az1
-  saopaulo_az2 = var.saopaulo_az2
-  ami_id       = var.saopaulo_ami_id
-
-
-  enable_tokyo_integration = true
-
-  # ✅ TGW attach targets Tokyo TGW
- tokyo_tgw_id   = module.tokyo_authority.tokyo_tgw_id
- tokyo_vpc_cidr = module.tokyo_authority.vpc_cidr
- tokyo_vpc_id   = module.tokyo_authority.vpc_id
- tokyo_rds_sg_id = module.tokyo_authority.rds_sg_id
-
-
-
-
-  tags = {
-    Project = var.project_name
-    Region  = "sa-east-1"
-    Role    = "tgw-attach"
-  }
-}
 
 
 

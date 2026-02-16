@@ -1,0 +1,16 @@
+
+# --- Sao Paulo (sa-east-1) ---
+ami_id          = "ami-0f85876b1aff99dde"
+saopaulo_ami_id = "ami-0f85876b1aff99dde"
+
+saopaulo_vpc_cidr = "10.20.0.0/16"
+
+# These must be AZ NAMES (NOT CIDRs)
+saopaulo_az1 = "sa-east-1a"
+saopaulo_az2 = "sa-east-1b"
+
+# These are LISTS (two subnets)
+saopaulo_private_subnet_cidrs = ["10.20.10.0/24", "10.20.11.0/24"]
+saopaulo_public_subnet_cidrs  = ["10.20.20.0/24", "10.20.21.0/24"]
+
+enable_tokyo_integration = false

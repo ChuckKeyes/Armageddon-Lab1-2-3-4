@@ -17,7 +17,7 @@
 resource "aws_security_group" "chewbacca_rds_sg01" {
   name        = "${var.project_name}-rds-sg01"
   description = "Tokyo RDS security group"
-  vpc_id      = aws_vpc.chewbacca_vpc01.id
+  vpc_id = aws_vpc.this.id
 
   tags = { Name = "${var.project_name}-tokyo-rds-sg01" }
 }

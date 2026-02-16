@@ -20,7 +20,7 @@
 **/*.auto.tfvars.json
 **/*.tfplan
 **/crash.log*
-!**/.terraform.lock.hcl
+**/.terraform.lock.hcl
 
 # ---- Secrets / keys ----
 **/*.json

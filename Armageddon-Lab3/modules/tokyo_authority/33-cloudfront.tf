@@ -26,9 +26,9 @@ resource "aws_acm_certificate_validation" "cf_cert_validation" {
   provider        = aws.us_east_1
   certificate_arn = aws_acm_certificate.cf_cert.arn
 
-  validation_record_fqdns = [
-    for r in aws_route53_record.acm_validation : r.fqdn
-  ]
+  # validation_record_fqdns = [
+  #   for r in aws_route53_record.acm_validation : r.fqdn
+  # ]
 }
 
 ############################

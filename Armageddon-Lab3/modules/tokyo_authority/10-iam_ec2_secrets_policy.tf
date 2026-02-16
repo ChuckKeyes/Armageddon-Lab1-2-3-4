@@ -15,7 +15,8 @@ resource "aws_iam_policy" "chewbacca_ec2_read_db_secret" {
         "secretsmanager:GetSecretValue",
         "secretsmanager:DescribeSecret"
       ]
-      Resource = aws_secretsmanager_secret.tokyo_db_secret.arn
+      Resource = data.aws_secretsmanager_secret.tokyo_db_secret.arn
+
 
     }]
   })

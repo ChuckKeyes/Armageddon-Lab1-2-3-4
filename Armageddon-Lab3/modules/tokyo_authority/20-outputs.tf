@@ -3,13 +3,13 @@
 # Tokyo Outputs
 ############################################
 
-output "vpc_id" {
-  value = aws_vpc.chewbacca_vpc01.id
-}
+# output "vpc_id" {
+#   value = aws_vpc.chewbacca_vpc01.id
+# }
 
-output "vpc_cidr" {
-  value = aws_vpc.chewbacca_vpc01.cidr_block
-}
+# output "vpc_cidr" {
+#   value = aws_vpc.chewbacca_vpc01.cidr_block
+# }
 
 output "private_route_table_ids" {
   value = [
@@ -50,6 +50,16 @@ output "tokyo_rds_sg_id" {
   value = aws_security_group.tokyo_rds_sg.id
 }
 
-output "tokyo_db_secret_arn" {
-  value = aws_secretsmanager_secret.tokyo_db_secret.arn
+# output "tokyo_db_secret_arn" {
+#   value = aws_secretsmanager_secret.tokyo_db_secret.arn
+# }
+
+output "vpc_id" {
+  value       = aws_vpc.this.id
+  description = "Tokyo VPC ID"
+}
+
+output "vpc_cidr" {
+  value       = aws_vpc.this.cidr_block
+  description = "Tokyo VPC CIDR"
 }

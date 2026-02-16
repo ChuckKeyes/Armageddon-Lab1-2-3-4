@@ -36,18 +36,9 @@ variable "tokyo_vpc_cidr" {
   type        = string
 }
 
-variable "tokyo_private_subnet_cidr01" {
-  description = "Tokyo private subnet AZ1"
-  type        = string
-  default     = null
-}
 
-variable "tokyo_private_subnet_cidr02" {
-  description = "Tokyo private subnet AZ2"
-  type        = string
-}
 
-# variable "tokyo_public_subnet_cidr01" { type = string }
+
 
 
 
@@ -151,11 +142,7 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "tokyo_private_subnet_ids" {
-  type        = list(string)
-  description = "Private subnet IDs for the DB subnet group"
-  default     = []
-}
+
 
 
 
@@ -236,5 +223,47 @@ variable "health_check_path" {
   default     = "/"
 }
 
-variable "tokyo_public_subnet_cidr01" { type = string }
-variable "tokyo_public_subnet_cidr02" { type = string }
+# variable "tokyo_public_subnet_cidr01" { type = string }
+# variable "tokyo_public_subnet_cidr02" { type = string }
+# variable "tokyo_private_subnet_cidr01" {
+#   description = "Tokyo private subnet AZ1"
+#   type        = string
+#   default     = null
+# }
+# variable "tokyo_private_subnet_cidr02" {
+#   description = "Tokyo private subnet AZ2"
+#   type        = string
+# }
+
+
+variable "tokyo_private_subnet_ids" {
+  type        = list(string)
+  description = "Private subnet IDs for the DB subnet group"
+  default     = []
+}
+
+
+variable "tokyo_private_subnet01_cidr" { type = string }
+variable "tokyo_private_subnet02_cidr" { type = string }
+variable "tokyo_public_subnet01_cidr"  { type = string }
+variable "tokyo_public_subnet02_cidr"  { type = string }
+
+
+
+variable "existing_tokyo_vpc_id" {
+  type        = string
+  default     = null
+  description = "If set, Tokyo module will use this existing VPC instead of creating a new one"
+}
+
+variable "existing_tokyo_subnet_ids" {
+  type    = list(string)
+  default = []
+}
+
+#####################################################################
+
+# variable "tokyo_db_secret_name" {
+#   description = "Name of the existing Tokyo RDS secret in Secrets Manager"
+#   type        = string
+# }

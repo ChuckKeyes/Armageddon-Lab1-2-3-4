@@ -39,7 +39,8 @@ data "aws_iam_policy_document" "tokyo_ec2_secrets_policy" {
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
-    resources = [aws_secretsmanager_secret.tokyo_db_secret.arn]
+    resources = [data.aws_secretsmanager_secret.tokyo_db_secret.arn]
+
   }
 
   # Optional: If your secret is encrypted with a CMK, allow decrypt.
