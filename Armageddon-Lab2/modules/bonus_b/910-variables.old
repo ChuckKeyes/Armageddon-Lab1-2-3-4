@@ -1,0 +1,109 @@
+variable "project_name" { type = string }
+variable "aws_region"   { type = string }
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "public_subnet_ids" {
+  type = list(string)
+}
+
+variable "target_instance_id" {
+  type = string
+}
+
+variable "target_ec2_sg_id" {
+  type = string
+}
+
+variable "target_port" {
+  type    = number
+  default = 80
+}
+
+variable "health_check_path" {
+  type    = string
+  default = "/"
+}
+
+variable "domain_name" {
+  type = string
+}
+
+variable "app_subdomain" {
+  type = string
+}
+
+variable "route53_zone_id" {
+  type = string
+}
+
+variable "enable_waf" {
+  type    = bool
+  default = true
+}
+
+variable "sns_topic_arn" {
+  type = string
+}
+
+variable "alb_5xx_threshold" {
+  type    = number
+  default = 1
+}
+
+variable "alb_5xx_period" {
+  type    = number
+  default = 300
+}
+
+variable "alb_5xx_eval_periods" {
+  type    = number
+  default = 1
+}
+
+
+
+variable "waf_log_destination" {
+  type    = string
+  default = "cloudwatch" # cloudwatch | s3 | firehose
+}
+
+variable "waf_log_retention_days" {
+  type    = number
+  default = 14
+}
+
+variable "enable_alb_access_logs" {
+  type    = bool
+  default = false
+}
+
+variable "alb_access_logs_prefix" {
+  type    = string
+  default = "alb"
+}
+
+variable "enable_zone_apex_alias" {
+  type    = bool
+  default = false
+}
+
+variable "manage_route53_in_terraform" {
+  description = "If true, create the Hosted Zone in this module. If false, use route53_hosted_zone_id."
+  type        = bool
+  default     = false
+}
+
+variable "route53_hosted_zone_id" {
+  description = "Existing Route53 Hosted Zone ID (used when manage_route53_in_terraform=false)."
+  type        = string
+  default     = ""
+}
+
+variable "certificate_validation_method" {
+  description = "ACM validation method: DNS or EMAIL. DNS required for automated Route53 validation."
+  type        = string
+  default     = "DNS"
+}

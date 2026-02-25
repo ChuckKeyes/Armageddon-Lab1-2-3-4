@@ -13,8 +13,7 @@ variable "vpc_cidr"  { type = string }
 
 variable "tokyo_vpc_cidr"              { type = string }
 
-variable "tokyo_private_subnet_cidr01" { type = string }
-variable "tokyo_private_subnet_cidr02" { type = string }
+
 variable "tokyo_app_subnet_id" {
   type = string
 }
@@ -75,11 +74,6 @@ variable "tokyo_private_subnet_ids" {
   type = list(string)
 }
 
-variable "tokyo_public_subnet_cidr01" { type = string }
-
-variable "tokyo_public_subnet_cidr02" {
-  type = string
-}
 
 
 
@@ -119,6 +113,10 @@ variable "enable_apex" {
   default = true 
   }
 
+variable "tokyo_db_secret_name" {
+  description = "Existing Secrets Manager secret name for Tokyo DB creds"
+  type        = string
+}
 
 
 
@@ -152,6 +150,13 @@ variable "saopaulo_instance_type" {
   type    = string
   default = "t3.micro"
 }
+
+variable "sao_paulo_vpc_cidr" {
+  description = "São Paulo VPC CIDR"
+  type        = string
+}
+
+
 
 # variable "saopaulo_az1" {
 #   type = string

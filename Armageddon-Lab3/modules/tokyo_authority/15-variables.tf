@@ -223,17 +223,7 @@ variable "health_check_path" {
   default     = "/"
 }
 
-# variable "tokyo_public_subnet_cidr01" { type = string }
-# variable "tokyo_public_subnet_cidr02" { type = string }
-# variable "tokyo_private_subnet_cidr01" {
-#   description = "Tokyo private subnet AZ1"
-#   type        = string
-#   default     = null
-# }
-# variable "tokyo_private_subnet_cidr02" {
-#   description = "Tokyo private subnet AZ2"
-#   type        = string
-# }
+
 
 
 variable "tokyo_private_subnet_ids" {

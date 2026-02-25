@@ -1,0 +1,80 @@
+############################
+# CloudFront Distribution (imported)
+############################
+resource "aws_cloudfront_distribution" "app_cdn" {
+  provider = aws.us_east_1
+
+  enabled     = true
+  price_class = "PriceClass_All"
+
+  # Match imported aliases ordering doesn’t matter, but values must match
+  aliases = var.enable_apex
+    ? [var.domain_name, "www.${var.domain_name}"]
+    : ["www.${var.domain_name}"]
+
+  # IMPORTANT: leave null to match state (do not set index.html)
+  default_root_object = null
+
+  origin {
+    origin_id   = "origin-app"
+    domain_name = var.origin_domain_name
+
+    connection_attempts = 3
+    connection_timeout  = 10
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+
+      origin_read_timeout      = 30
+      origin_keepalive_timeout = 5
+    }
+  }
+
+  default_cache_behavior {
+    target_origin_id       = "origin-app"
+    viewer_protocol_policy = "redirect-to-https"
+
+    allowed_methods = ["GET", "HEAD", "OPTIONS"]
+    cached_methods  = ["GET", "HEAD"]
+
+    # Match state
+    compress    = false
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      headers      = []
+
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+      locations        = []
+    }
+  }
+
+  viewer_certificate {
+    # Use existing cert ARN if you imported a distribution that already uses one.
+    # Prefer a variable so you can pin it exactly to the deployed cert.
+    acm_certificate_arn      = var.cloudfront_acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+    cloudfront_default_certificate = false
+  }
+
+  wait_for_deployment = true
+
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-app-cdn"
+  })
+}

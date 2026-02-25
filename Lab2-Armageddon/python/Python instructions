@@ -1,0 +1,86 @@
+🔄 Show the correct run order
+
+cd python
+
+python3 malgus_cli.py triage
+
+python3 malgus_cli.py insights --log-group "<LOG_GROUP_NAME>" --query "<QUERY_STRING>" --minutes 15
+
+python3 malgus_cli.py cloak-test --cloudfront-url "https://<your-domain-or-cf-url>" --alb-url "https://<your-alb-dns>"
+
+python3 malgus_cli.py cf-probe "https://<your-url>"
+
+python3 malgus_cli.py drift --secret-id "<SECRET_ID>" --ssm-path "/lab/db/"
+
+python3 malgus_cli.py drift --secret-id "<SECRET_ID>" --ssm-path "/lab/db/"
+
+python3 malgus_waf_block_spike_detector.py
+
+python3 malgus_cost_guardrail_estimator.py
+
+python3 malgus_cli.py bedrock-report --model-id "<MODEL_ID>" --evidence-json "evidence.json" --out "incident_report.md"
+
+python3 malgus_bedrock_ir_generator_local.py "<MODEL_ID>" "evidence.json" "template.md"
+
+python3 malgus_cli.py invalidate --distribution-id "<DIST_ID>" --paths "/index.html"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🧱 Turn this into a professional portfolio diagram
+
+📊 Map it to resume bullet points
+
+🛠 Convert it into a single production-ready CLI toolkit structure
+
+
+
+
+
+
+Changes to Outputs:
+  - alb_arn                    = "arn:aws:elasticloadbalancing:ap-northeast-
+  - alb_cert_arn_tokyo         = "arn:aws:acm:ap-northeast-1:557690581423:ce
+  - alb_dns_name               = "lab2-vpc-alb-451009432.ap-northeast-1.elb.
+  - app_fqdn                   = "www.keyescloudsolutions.com" -> null
+  - azs                        = [
+      - "ap-northeast-1a",
+      - "ap-northeast-1c",
+    ] -> null
+  - cloudfront_distribution_id = "E3BZLJNQCHJ6H3" -> null
+  - cloudfront_domain_name     = "d3ke9svnmp2zff.cloudfront.net" -> null
+  - cloudfront_viewer_cert_arn = "arn:aws:acm:us-east-1:557690581423:certifi
+  - cloudfront_waf_arn         = "arn:aws:wafv2:us-east-1:557690581423:globa
+  - cloudfront_waf_id          = "69896d27-b869-4db0-94da-379e8a30c877" -> n
+  - domain_name                = "keyescloudsolutions.com" -> null
+  - igw_id                     = "igw-0c60aa673ff4f13c6" -> null
+  - origin_header_name         = "X-Origin-Verify" -> null
+  - origin_header_value        = (sensitive value) -> null
+  - private_app_subnet_ids     = [
+      - "subnet-01feedb6c414cc42a",
+      - "subnet-0a7d40a9c854c5bb1",
+    ] -> null
+  - private_db_subnet_ids      = [
+      - "subnet-0d9650e523e9dd3b8",
+      - "subnet-0cc8ea657f749c20e",
+    ] -> null
+  - public_subnet_ids          = [
+      - "subnet-0d5915f1a3f44c9bb",
+      - "subnet-00c765e97c97c5445",
+    ] -> null
+  - rds_endpoint               = "lab2-vpc-db.ch24q2ss4jm0.ap-northeast-1.rd
+  - rds_port                   = 5432 -> null
+  - target_group_arn           = "arn:aws:elasticloadbalancing:ap-northeast-
+  - vpc_id                     = "vpc-0f346555ff0585206" -> null

@@ -1,0 +1,6 @@
+origin {
+  custom_header {
+    name  = var.origin_header_name
+    value = random_password.origin_header_value.result
+  }
+}
