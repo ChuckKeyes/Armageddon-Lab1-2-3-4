@@ -54,13 +54,13 @@ output "domain_name" {
   value = var.domain_name
 }
 
-# output "cloudfront_distribution_id" {
-#   value = aws_cloudfront_distribution.cf.id
-# }
+output "cloudfront_distribution_id" {
+  value = aws_cloudfront_distribution.cf.id
+}
 
-# output "cloudfront_domain_name" {
-#   value = aws_cloudfront_distribution.cf.domain_name
-# }
+output "cloudfront_domain_name" {
+  value = aws_cloudfront_distribution.cf.domain_name
+}
 
 # output "cloudfront_waf_arn" {
 #   value = aws_wafv2_web_acl.cf_waf.arn
